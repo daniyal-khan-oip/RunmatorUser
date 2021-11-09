@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, Dimensions, TextInput } from 'react
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const Inputbox = ({value,setTextValue,placeholderTilte,isSecure}) => {
+const Inputbox = ({value,setTextValue,placeholderTilte,isSecure,keyboardType}) => {
 
     return (
         <TextInput
@@ -14,6 +14,8 @@ const Inputbox = ({value,setTextValue,placeholderTilte,isSecure}) => {
             value={value}
             placeholder={placeholderTilte}
             secureTextEntry={isSecure || false}
+            keyboardType={keyboardType || "default"}
+
         />
 
     )

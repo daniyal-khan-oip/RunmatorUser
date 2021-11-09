@@ -7,16 +7,7 @@ function Home(props) {
   return (
     <View style={styles.container}>
       <View>
-      <TouchableOpacity style={styles.btn} 
-      onPress={() => {
-        props.navigation.navigate('LogIn')
-        console.log("work")
-      }}
-      >
-        <Text style={styles.text}>
-          Log in
-        </Text>
-      </TouchableOpacity>
+        <Text style={styles.text}>HOME</Text>
       </View>
     </View>
   )
@@ -30,7 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebebeb'
   },
   text: {
-    color: 'white',
+    color: 'black',
     fontSize: 18,
     fontWeight: 'bold'
   },

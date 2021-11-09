@@ -9,8 +9,6 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import Button from '../components/Button';
 import Inputbox from '../components/Inputbox';
 import logo from '../assets/run-matter-logo.png';
@@ -33,6 +31,9 @@ const LogIn = ({navigation}) => {
   };
   const _onPressSignUp = () => {
     navigation.navigate('SignUp');
+  };
+  const _onPresspassword = () => {
+    navigation.navigate('ForgotPassword');
   };
 
   return (
@@ -61,7 +62,7 @@ const LogIn = ({navigation}) => {
             justifyContent: 'center',
           }}>
           <Text>Forgot Password?</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => _onPresspassword()}>
             <Text style={{color: 'blue'}}> Click Here</Text>
           </TouchableOpacity>
         </View>
