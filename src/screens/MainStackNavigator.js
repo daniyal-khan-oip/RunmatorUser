@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Home from './Home';
 import LogIn from './LogIn';
@@ -9,6 +9,7 @@ import BankCardDetails from './BankCardDetails';
 import Otp from './Otp';
 import ForgotPassword from './ForgotPassword'
 import ConfirmPassword from './ConfirmPassword'
+import HistoryScreen from './HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ function MainStackNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="History"
         screenOptions={{
           headerShown: false,
         }}>
@@ -33,6 +35,7 @@ function MainStackNavigator() {
 
         <Stack.Screen name="ConfirmPassword" component={ConfirmPassword} />
 
+        <Stack.Screen name="History" component={HistoryScreen} />
 
 
       </Stack.Navigator>

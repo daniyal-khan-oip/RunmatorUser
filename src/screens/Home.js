@@ -19,18 +19,22 @@ import BoxComp from '../components/BoxComp';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-function Home(props) {
-  const {navigation} = props;
-  let name= "Minhal";
+function Home({navigation}) {
+  // const { navigation } = props;
+  let name = "Minhal";
   return (
     <View style={styles.container}>
       <Image source={wave} style={styles.img_wave} />
 
-      <View style={{flexDirection:"row"}}>
+      <View style={{ flexDirection: "row" }}>
         <Heading title="Hello," passedStyle={styles.heading} />
         <Heading title={name} passedStyle={styles.heading_username} />
-        <BoxComp/>
+
+        <BoxComp />
       </View>
+      <TouchableOpacity style={styles.boxContainer} onPress={() => { navigation.navigate("History") }}>
+        <Heading title="History" passedStyle={styles.historyText} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -47,17 +51,39 @@ const styles = StyleSheet.create({
   heading: {
     color: 'black',
     marginLeft: width * 0.12,
-    fontSize:width * 0.11,
+    fontSize: width * 0.11,
     fontWeight: 'bold',
 
   },
   heading_username: {
     color: colors.themeBlue,
-    fontSize:width * 0.11,
+    fontSize: width * 0.11,
     fontWeight: 'bold',
-    fontStyle:'italic'
+    fontStyle: 'italic'
 
   },
+  historyText: {
+    color: colors.themeBlue,
+    fontSize: width * 0.07,
+    fontWeight: 'bold',
+
+  },
+  boxContainer: {
+    borderRadius: width * 0.02,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    backgroundColor: 'white',
+    paddingHorizontal: width * 0.2,
+    width: width * 0.45,
+    paddingVertical: height * 0.005,
+  }
 });
 
 export default Home;
