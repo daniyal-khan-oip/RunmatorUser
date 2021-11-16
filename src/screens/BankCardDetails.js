@@ -38,7 +38,7 @@ const BankCardDetails = ({navigation,route}) => {
 
         <View style={styles.inputBoxes}>
           <Inputbox
-            value={cardnumber}
+            value={cardnumber} 
             setTextValue={setCardnumber}
             placeholderTilte="Card Details"
             isSecure={true}

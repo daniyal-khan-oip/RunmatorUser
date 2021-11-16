@@ -1,38 +1,63 @@
+import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from 'react-native';
+import Heading from '../components/Heading';
+import car from '../assets/Car.png';
+import battery from '../assets/Battery.png';
+import wave from '../assets/Wave.png';
+import wheel from '../assets/Wheel.png';
+import construction from '../assets/Construction.png';
+import colors from '../assets/colors';
+import BoxComp from '../components/BoxComp';
 
-import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 function Home(props) {
-  const {navigation} = props
+  const {navigation} = props;
+  let name= "Minhal";
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.text}>HOME</Text>
+      <Image source={wave} style={styles.img_wave} />
+
+      <View style={{flexDirection:"row"}}>
+        <Heading title="Hello," passedStyle={styles.heading} />
+        <Heading title={name} passedStyle={styles.heading_username} />
+        <BoxComp/>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ebebeb'
+    backgroundColor: 'white',
   },
-  text: {
+  img_wave: {
+    marginTop: height * 0.15,
+    marginLeft: width * 0.12,
+  },
+  heading: {
     color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  btn:{
-    backgroundColor: "#043c75", 
-    width: 150, 
-    height: 30,
-    alignItems:'center',
-    borderRadius:20,
-    justifyContent:'center'
-  }
-})
+    marginLeft: width * 0.12,
+    fontSize:width * 0.11,
+    fontWeight: 'bold',
 
-export default Home
+  },
+  heading_username: {
+    color: colors.themeBlue,
+    fontSize:width * 0.11,
+    fontWeight: 'bold',
+    fontStyle:'italic'
+
+  },
+});
+
+export default Home;
