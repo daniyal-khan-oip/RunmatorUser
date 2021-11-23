@@ -1,5 +1,5 @@
 const colors = {
-    themeBlue :"#043c75",
+    themeBlue :"#0756A3",
     
 }
 

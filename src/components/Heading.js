@@ -15,7 +15,7 @@ const height = Dimensions.get('window').height;
 const Heading = ({title,passedStyle}) => {
   return (
     <Text
-    style={styles.text,passedStyle}
+    style={[styles.text,passedStyle]}
     >
       {title}
     </Text>
@@ -23,9 +23,10 @@ const Heading = ({title,passedStyle}) => {
 };
 const styles = StyleSheet.create({
   text: {
-    fontSize: 24,
+    fontSize: width*0.11,
     color: colors.themeBlue,
     fontWeight: 'bold',
+    color: 'black',
   },
 });
 

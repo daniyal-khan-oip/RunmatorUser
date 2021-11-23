@@ -1,7 +1,7 @@
 import React from 'react'
 
-import MainStackNavigator from './src/screens/MainStackNavigator'
+import MainNavigator from './src/screens/MainNavigator'
 
 export default function App() {
-  return <MainStackNavigator />
+  return <MainNavigator />
 }
