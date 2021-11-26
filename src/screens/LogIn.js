@@ -15,21 +15,23 @@ import logo from '../assets/run-matter-logo.png';
 import background_img from '../assets/backgroung-image.png';
 import colors from '../assets/colors';
 import Heading from '../components/Heading';
+import { connect } from "react-redux";
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const LogIn = ({navigation}) => {
+const LogIn = ({navigation,UserReducer}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const _onPressLogIn = () => {
-    if (email === '' || password === '') {
-      alert('Invalid Login');
-    } else {
-      navigation.navigate('Home');
-      console.log(email);
-    }
+    console.log(UserReducer)
+    // if (email === '' || password === '') {
+    //   alert('Invalid Login');
+    // } else {
+    //   navigation.navigate('Home');
+    //   console.log(email);
+    // }
   };
   const _onPressSignUp = () => {
     navigation.navigate('SignUp');
@@ -185,4 +187,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+// export default LogIn;
+const mapStateToProps = ({ UserReducer }) => {
+  return { UserReducer };
+};
+
+export default connect(mapStateToProps, null)(LogIn);
