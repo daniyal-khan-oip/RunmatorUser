@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 function AuthRootStackScreens() {
   return (
     <Stack.Navigator
-      initialRouteName="Walkthrough"
+      initialRouteName="LogIn"
       screenOptions={{
         headerShown: false,
       }}>

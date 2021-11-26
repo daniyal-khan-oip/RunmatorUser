@@ -14,6 +14,8 @@ import {CommonActions} from '@react-navigation/native';
 import IconComp from './components/IconComp';
 import colors from './assets/colors';
 import Heading from './components/Heading';
+import {connect} from 'react-redux';
+import * as actions from './store/Actions/index';
 
 const {width, height} = Dimensions.get('window');
 
@@ -48,7 +50,7 @@ const CustomButton = ({onPress, label, style,  currentScreenName}) => {
   );
 };
 
-const CustomDrawer = ({navigation, routes}) => {
+const CustomDrawer = ({navigation, routes,user_logout}) => {
   const isDrawerOpen = useDrawerStatus() === 'open';
   const history = navigation.getState().history;
   const currentScreenName = isDrawerOpen
@@ -132,7 +134,7 @@ const CustomDrawer = ({navigation, routes}) => {
             <CustomButton
               label={Logout}
               onPress={() => {
-                console.log('logout');
+                user_logout()
               }}
               currentScreenName={currentScreenName}
             />
@@ -143,7 +145,12 @@ const CustomDrawer = ({navigation, routes}) => {
   );
 };
 
-export default CustomDrawer;
+// export default CustomDrawer;
+// const mapStateToProps = ({UserReducer}) => {
+//   return {UserReducer};
+// };
+
+export default connect(null, actions)(CustomDrawer);
 
 const styles = StyleSheet.create({
   menuContainer: {

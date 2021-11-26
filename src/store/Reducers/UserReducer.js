@@ -2,8 +2,6 @@ import {USER_LOGIN, USER_LOGOUT, USER_SIGNUP} from '../Actions/actionType';
 
 const INITIAL_STATE = {
   isUserLogin: false,
-  isApiCall: false,
-  // forgetPassUiFlow: "enterEmail",
 };
 
 export function UserReducer(state = INITIAL_STATE, action) {
@@ -11,7 +9,7 @@ export function UserReducer(state = INITIAL_STATE, action) {
     case USER_SIGNUP:
       return {...state, ...action.payload};
     case USER_LOGIN:
-      return {...state, ...action.payload};
+      return {...action.payload};
     case USER_LOGOUT:
       return {...action.payload};
     default:
