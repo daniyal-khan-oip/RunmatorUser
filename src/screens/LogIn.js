@@ -15,23 +15,29 @@ import logo from '../assets/run-matter-logo.png';
 import background_img from '../assets/backgroung-image.png';
 import colors from '../assets/colors';
 import Heading from '../components/Heading';
-import { connect } from "react-redux";
+import {connect} from 'react-redux';
+import * as actions from '../store/Actions/index';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const LogIn = ({navigation,UserReducer}) => {
+const LogIn = ({navigation, UserReducer, user_login}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const _onPressLogIn = () => {
-    console.log(UserReducer)
-    // if (email === '' || password === '') {
-    //   alert('Invalid Login');
-    // } else {
-    //   navigation.navigate('Home');
-    //   console.log(email);
-    // }
+    if (email === '' || password === '') {
+      alert('Both fields required');
+    } else if (email === 'admin' || password === 'admin') {
+      console.log(UserReducer);
+      user_login({email, password}).then(() => {
+        console.log('work');
+      });
+    } else {
+      // navigation.navigate('Home');
+      alert('Invalid Credentials');
+      // console.log(email);
+    }
   };
   const _onPressSignUp = () => {
     navigation.navigate('SignUp');
@@ -43,7 +49,7 @@ const LogIn = ({navigation,UserReducer}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>
-        <Image source={logo} style={styles.logo} />
+        <Image source={logo} style={styles.logo} resizeMode="contain"/>
 
         <View style={styles.inputBoxes}>
           <Inputbox
@@ -134,8 +140,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: width * 0.8,
     width: width * 0.8,
-    borderWidth:1,
-    borderColor:colors.themeBlue,
+    borderWidth: 1,
+    borderColor: colors.themeBlue,
   },
   btnSignUpTextStyle: {
     color: colors.themeBlue,
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
     width: width * 0.5,
     height: height * 0.16,
     marginTop: height * 0.1,
+    // backgroundColor:'red'
   },
 
   image: {
@@ -188,8 +195,8 @@ const styles = StyleSheet.create({
 });
 
 // export default LogIn;
-const mapStateToProps = ({ UserReducer }) => {
-  return { UserReducer };
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
 };
 
-export default connect(mapStateToProps, null)(LogIn);
+export default connect(mapStateToProps, actions)(LogIn);

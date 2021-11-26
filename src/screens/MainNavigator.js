@@ -1,12 +1,24 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useState} from 'react';
-
+import React, {useEffect, useState} from 'react';
+import { connect } from "react-redux";
 import {StyleSheet, Text, View} from 'react-native';
 import AuthRootStackScreens from './AuthRootStackScreens';
 import MainAppScreens from './MainAppScreens';
-const MainNavigator = () => {
-  const [token, setToken] = useState("null");
+const MainNavigator = ({UserReducer}) => {
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log("use effect--------------------------------")
+    if (UserReducer.isUserLogin) {
+      console.log(UserReducer,"--------------------------------")
+      setToken("123")
+    }
+    else{
+      setToken(null)
+    }
+  }, [UserReducer])
+
   if (loading) {
     return <Text>Loading</Text>;
   } else {
@@ -22,6 +34,9 @@ const MainNavigator = () => {
   }
 };
 
-export default MainNavigator;
+// export default MainNavigator;
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
 
-const styles = StyleSheet.create({});
+export default connect(mapStateToProps, null)(MainNavigator);
