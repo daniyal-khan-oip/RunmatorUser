@@ -40,6 +40,7 @@ const Profile = props => {
 
   // Upload Photo
   const uploadPhoto = async () => {
+    console.log('Upload photo');
     var options = {
       title: 'Select Image',
       allowsEditing: true,
@@ -113,11 +114,7 @@ const Profile = props => {
             />
           )}
           <TouchableOpacity
-            style={{
-              position: 'absolute',
-              top: height * 0.17,
-              backgroundColor: 'blue',
-            }}
+            style={styles.iconTouchable}
             onPress={() => uploadPhoto()}>
             <IconComp
               iconName="camera-alt"
@@ -250,12 +247,15 @@ const styles = StyleSheet.create({
   icon: {
     backgroundColor: colors.themeBlue,
     color: '#ffffff',
-    position: 'absolute',
-    top: height * 0.03,
-    left: width * 0.13,
-    paddingVertical: height * 0.01,
-    paddingHorizontal: height * 0.01,
+    padding: height * 0.01,
     borderRadius: width,
+  },
+  iconTouchable:{
+    position: 'absolute',
+    top: height * 0.18,
+    right: width * 0.02,
+    backgroundColor: 'blue',
+    borderRadius:width
   },
   border_line: {
     borderBottomWidth: 1,
