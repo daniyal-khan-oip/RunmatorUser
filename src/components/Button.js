@@ -3,12 +3,23 @@ import {StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native';
 import colors from '../assets/colors';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const Button = ({title, onBtnPress, isBgColor = true}) => {
+const Button = ({
+  title,
+  onBtnPress,
+  isBgColor = true,
+  btnStyle,
+  btnTextStyle,
+}) => {
   return (
     <TouchableOpacity
+      activeOpacity={0.8}
       style={[
         styles.btn,
-        isBgColor ? styles.btnWithBgColor : styles.btnWithOutBgColor,
+        isBgColor
+          ? styles.btnWithBgColor
+          : btnStyle
+          ? btnStyle
+          : styles.btnWithOutBgColor,
       ]}
       onPress={() => {
         onBtnPress();
@@ -16,7 +27,13 @@ const Button = ({title, onBtnPress, isBgColor = true}) => {
       <Text
         style={[
           styles.text,
-          {color: isBgColor ? '#ffffff' : colors.themeBlue},
+
+          isBgColor
+            ? {color: 'white'}
+            : btnTextStyle
+            ? btnTextStyle
+            : {color: colors.themeBlue},
+          // color: isBgColor ? '#ffffff' : colors.themeBlue},
         ]}>
         {title}
       </Text>
@@ -27,7 +44,8 @@ const Button = ({title, onBtnPress, isBgColor = true}) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: width * 0.05,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    fontFamily:'Montserrat-Bold'
   },
   btn: {
     width: width * 0.8,
@@ -42,8 +60,8 @@ const styles = StyleSheet.create({
   },
   btnWithOutBgColor: {
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    borderWidth:1,
-    borderColor:colors.themeBlue,
+    borderWidth: 1,
+    borderColor: colors.themeBlue,
   },
 });
 

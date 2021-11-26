@@ -13,6 +13,8 @@ import Button from '../components/Button';
 import Inputbox from '../components/Inputbox';
 import logo from '../assets/run-matter-logo.png';
 import background_img from '../assets/backgroung-image.png';
+import Heading from '../components/Heading';
+import colors from '../assets/colors';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,16 +27,18 @@ const SignUp = ({navigation}) => {
   const [c_password, setC_Password] = useState('');
 
   const _onPressSignUp = () => {
-    if (email === '' || password === '' ||c_password ==='' || username ==='' || phone_no ==='' ) {
+    if (
+      email === '' ||
+      password === '' ||
+      c_password === '' ||
+      username === '' ||
+      phone_no === ''
+    ) {
       alert('All fields required');
-    } 
-    else if(password != c_password)
-    {
-        alert('Password does not match ');
-    }
-    
-    else {
-      navigation.navigate('BankCardDetails',{
+    } else if (password != c_password) {
+      alert('Password does not match ');
+    } else {
+      navigation.navigate('BankCardDetails', {
         username,
         email,
         phone_no,
@@ -67,7 +71,7 @@ const SignUp = ({navigation}) => {
             value={phone_no}
             setTextValue={setPhone_no}
             placeholderTilte="Phone #"
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
           <Inputbox
             value={password}
@@ -82,20 +86,34 @@ const SignUp = ({navigation}) => {
             isSecure={true}
           />
         </View>
-        <Button title="Next >" onBtnPress={() => _onPressSignUp()} />
+        <Button
+          title="Next >"
+          onBtnPress={() => _onPressSignUp()}
+          isBgColor={false}
+          btnStyle={styles.btnStyle}
+          btnTextStyle={styles.btnTextStyle}
+        />
         <View
           style={{
             flexDirection: 'row',
             marginBottom: 10,
             justifyContent: 'center',
           }}>
-          <Text>Already have an Account?</Text>
+          <Heading
+            title="Already have an Account?"
+            fontType="medium"
+            passedStyle={styles.alreadyLabel}
+          />
           <TouchableOpacity onPress={() => _onPresslogin()}>
-            <Text style={{color: 'purple'}}> Login</Text>
+            <Heading
+              title="Login"
+              fontType="bold"
+              passedStyle={styles.loginLabel}
+            />
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.horizontalLinePosition}>
+        {/* <View style={styles.horizontalLinePosi  tion}>
           <View style={styles.horizontalLine} />
           <View>
             <Text style={{width: 30, textAlign: 'center'}}>Or</Text>
@@ -115,6 +133,24 @@ const SignUp = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  alreadyLabel: {
+    fontSize: width * 0.034,
+    color: 'rgba(0,0,0,.8)',
+  },
+  btnStyle: {
+    backgroundColor: colors.themeBlue,
+    borderRadius: width * 0.8,
+    width: width * 0.8,
+  },
+  btnTextStyle: {
+    color: 'white',
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  loginLabel: {
+    fontSize: width * 0.034,
+    color: colors.themeBlue,
+    paddingLeft: width * 0.015,
+  },
   horizontalLine: {
     flex: 1,
     height: 1,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ScrollView,
+  ScrollView,LogBox,
+  FlatList,
 } from 'react-native';
 import Heading from '../components/Heading';
 import car from '../assets/Car.png';
@@ -18,27 +19,81 @@ import colors from '../assets/colors';
 import BoxComp from '../components/BoxComp';
 import Button from '../components/Button';
 import Header from '../components/Header';
-import {validatePathConfig} from '@react-navigation/core';
+import OptionsMapper from '../components/OptionsMapper';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 function Home({navigation}) {
-  let name = 'User';
+  const [options, setOptions] = useState(dummyOptions);
+  let name = 'Michael';
+
+  // Options Handler
+  const _onPressOptions = (item, index) => {
+    navigation.navigate('Map');
+  };
+
+
   const _onPressSignUp = () => {
     navigation.navigate('AllServices');
   };
 
   return (
-    <ScrollView style={{backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       <Header title="Menu" navigation={navigation} />
-      <View style={styles.container}>
-        <Image source={wave} style={styles.img_wave} />
+      {/* <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}> */}
+      {/* <Image source={wave} style={styles.img_wave} />
 
-        <View style={{flexDirection: 'row'}}>
-          <Heading title="Hello," passedStyle={styles.heading} />
-          <Heading title={name} passedStyle={styles.heading_username} />
-        </View>
+      <View style={{flexDirection: 'row'}}>
+        <Heading title="Hello," passedStyle={styles.heading} fontType="bold" />
+        <Heading
+          title={name}
+          passedStyle={styles.heading_username}
+          fontType="bold-italic"
+        />
+      </View> */}
+
+      {/* Features FlatList  */}
+      <FlatList
+        vertical
+        numColumns={2}
+        nestedScrollEnabled={true}
+        contentContainerStyle={styles.flatListContentContainerStyle}
+        data={options}
+        keyExtractor={item => item?._id.toString()}
+        ListHeaderComponent={() => (
+          <>
+            <Image source={wave} style={styles.img_wave} />
+
+            <View style={{flexDirection: 'row'}}>
+              <Heading
+                title="Hello,"
+                passedStyle={styles.heading}
+                fontType="bold"
+              />
+              <Heading
+                title={name}
+                passedStyle={styles.heading_username}
+                fontType="bold-italic"
+              />
+            </View>
+          </>
+        )}
+        ListHeaderComponentStyle={{
+          // backgroundColor: 'red',
+          marginTop: height * -0.05,
+        }}
+        renderItem={({item, index}) => (
+          <OptionsMapper item={item} index={index} onPress={_onPressOptions} />
+        )}
+        // ListFooterComponent={ () => }
+      />
+      {/* 
+        Ahmed Code Here:::--
         <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
           <TouchableOpacity
             style={styles.boxContainer}
@@ -79,45 +134,56 @@ function Home({navigation}) {
             <Text style={styles.text}>Accident</Text>
             <Text style={styles.text}>Wheel</Text>
           </View>
-        </View>
-        <View
-          style={{
-            marginVertical: height * 0.05,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Button
-            title="View All Services"
-            onBtnPress={() => _onPressSignUp()}
-            isBgColor={true}
-          />
-        </View>
-        {/* </ScrollView> */}
+        </View> */}
+
+      {/* All Services  */}
+      <View style={styles.allServicesStyle}>
+        <Button
+          title="View All Services"
+          onBtnPress={() => _onPressSignUp()}
+          isBgColor={false}
+          btnStyle={styles.btnStyle}
+          btnTextStyle={styles.btnTextStyle}
+        />
       </View>
-    </ScrollView>
+      {/* </ScrollView> */}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  btnStyle: {
+    backgroundColor: colors.themeBlue,
+    borderRadius: width * 0.08,
+    width: width * 0.6,
+  },
+  btnTextStyle: {
+    color: 'white',
+    fontSize: width * 0.04,
+  },
+  flatListContentContainerStyle: {
+    alignItems: 'center',
+  },
+  allServicesStyle: {
+    // marginVertical: height * 0.05,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
   img_wave: {
-    marginTop: height * 0.05,
-    marginLeft: width * 0.07,
+    marginTop: height * 0.08,
   },
   heading: {
     color: 'black',
-    marginLeft: width * 0.07,
     fontSize: width * 0.11,
-    fontWeight: 'bold',
   },
   heading_username: {
     color: colors.themeBlue,
     fontSize: width * 0.11,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
+    paddingLeft: width * 0.02,
   },
   boxContainer: {
     borderRadius: width * 0.02,
@@ -143,7 +209,6 @@ const styles = StyleSheet.create({
 
   text: {
     fontSize: width * 0.05,
-    fontWeight: 'bold',
     color: '#000',
     marginLeft: width * 0.08,
     marginRight: width * 0.22,
@@ -152,3 +217,26 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
+const dummyOptions = [
+  {
+    _id: 1,
+    text: 'towing',
+    image: require('../assets/Images/services/towing.png'),
+  },
+  {
+    _id: 2,
+    text: 'battery',
+    image: require('../assets/Images/services/battery.png'),
+  },
+  {
+    _id: 3,
+    text: 'accident',
+    image: require('../assets/Images/services/accident.png'),
+  },
+  {
+    _id: 4,
+    text: 'flat tyre',
+    image: require('../assets/Images/services/flattyre.png'),
+  },
+];

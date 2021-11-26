@@ -11,12 +11,12 @@ import Modal from 'react-native-modal';
 import colors from '../assets/colors';
 const {width, height} = Dimensions.get('window');
 import Button from './Button';
+import Heading from './Heading';
 
 const HistoryModal = ({data, showModal, setIsModalVisible}) => {
-
-    setTimeout(() => {
-        setIsModalVisible(false)
-     }, 4000)
+  // setTimeout(() => {
+  //     setIsModalVisible(false)
+  //  }, 4000)
 
   return (
     <View
@@ -28,8 +28,7 @@ const HistoryModal = ({data, showModal, setIsModalVisible}) => {
         isVisible={showModal}
         swipeDirection={['up']}
         onSwipeMove={p => setIsModalVisible(false)}
-        onBackButtonPress={p=>setTimeout}
-        >
+        onBackButtonPress={p => setTimeout}>
         <View style={styles.container}>
           <View
             style={{
@@ -37,34 +36,73 @@ const HistoryModal = ({data, showModal, setIsModalVisible}) => {
               paddingHorizontal: width * 0.05,
               borderRadius: 20,
             }}>
-            <Text style={styles.heading}>Recipt</Text>
-            <Text style={styles.label}>Location</Text>
-            <Text style={{fontSize: width * 0.045}}>{data?.location}</Text>
+            <Heading
+              passedStyle={styles.heading}
+              title="Recipt"
+              fontType="bold"
+            />
+            <Heading
+              passedStyle={styles.label}
+              title="Location"
+              fontType="bold"
+            />
+            <Heading
+              passedStyle={styles.valueWithTopSpace}
+              title={data?.location}
+              fontType="regular"
+            />
 
-            <Text style={[styles.label, {marginTop: height * 0.02}]}>Date</Text>
-            <Text style={styles.value}>
-              {moment(data?.date).format('hh MMMM yyyy')}
-            </Text>
+            <Heading passedStyle={styles.label} title="Date" fontType="bold" />
+            <Heading
+              passedStyle={styles.valueWithTopSpace}
+              title={moment(data?.date).format('hh MMMM yyyy')}
+            />
 
             <View style={[styles.rowView, {marginTop: height * 0.03}]}>
-              <Text style={[styles.label]}>Total Amount</Text>
-              <Text style={styles.value}>$30</Text>
+              <Heading
+                passedStyle={[styles.label]}
+                title="Total Amount"
+                fontType="bold"
+              />
+              <Heading
+                passedStyle={styles.value}
+                title={`$${(30).toFixed(2)}`}
+                fontType="regular"
+              />
             </View>
 
             <View style={styles.rowView}>
-              <Text style={styles.label}>Amount Paid</Text>
-              <Text style={styles.value}>{`$${data?.price.toFixed(2)}`}</Text>
+              <Heading
+                passedStyle={styles.label}
+                title="Amount Paid"
+                fontType="bold"
+              />
+              <Heading
+                passedStyle={styles.value}
+                title={`$${data?.price.toFixed(2)}`}
+                fontType="regular"
+              />
             </View>
 
             <View style={styles.rowView}>
-              <Text style={styles.label}>Refunded</Text>
-              <Text style={styles.value}>{`$${(20.0).toFixed(2)}`}</Text>
+              <Heading
+                passedStyle={styles.label}
+                title="Refunded"
+                fontType="bold"
+              />
+              <Heading
+                passedStyle={styles.value}
+                title={`$${(20.0).toFixed(2)}`}
+                fontType="regular"
+              />
             </View>
           </View>
           <Button
             title={'GENERATE PDF'}
             onBtnPress={() => setIsModalVisible(false)}
-            isBgColor={true}
+            isBgColor={false}
+            btnStyle={styles.btnStyle}
+            btnTextStyle={styles.btnTextStyle}
           />
         </View>
       </Modal>
@@ -79,26 +117,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItem: 'center',
     justifyContent: 'space-between',
-    paddingVertical: height * 0.008,
   },
   container: {
     backgroundColor: 'white',
     width: width * 0.9,
-    borderRadius: width * 0.08,
-    paddingVertical: height * 0.03,
+    borderRadius: width * 0.07,
+    paddingVertical: height * 0.05,
   },
   heading: {
     color: colors.themeBlue,
     fontSize: width * 0.08,
-    fontWeight: '800',
     alignSelf: 'center',
   },
   value: {
-    fontSize: width * 0.05,
+    fontSize: width * 0.045,
+    color: 'rgba(0,0,0,0.6)',
+  },
+  valueWithTopSpace: {
+    fontSize: width * 0.045,
+    color: 'rgba(0,0,0,0.6)',
+    marginTop: height * 0.01,
   },
   label: {
-    fontWeight: '800',
     color: 'black',
-    fontSize: width * 0.05,
+    fontSize: width * 0.045,
+    marginTop: height * 0.01,
+  },
+  btnStyle: {
+    marginTop: height * 0.05,
+    backgroundColor: colors.themeBlue,
+    borderRadius: width * 0.04,
+  },
+  btnTextStyle: {
+    color: 'white',
+    fontSize: width * 0.045
   },
 });

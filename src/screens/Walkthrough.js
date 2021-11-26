@@ -13,6 +13,7 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
+import colors from '../assets/colors';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,9 +26,11 @@ const Walkthrough = ({navigation}) => {
       <Image resizeMode="contain" source={logo} style={styles.logo} />
         <View style={{marginVertical:height*0.2}}>
         <Button
-            title="Get Started >"
+            title="GET STARTED >"
             onBtnPress={() => _onPressSignUp()}
-            isBgColor={true}
+            isBgColor={false}
+            btnStyle={styles.btnStyle}
+            btnTextStyle={styles.btnTextStyle}
         />
         </View>
     </ImageBackground>
@@ -35,6 +38,15 @@ const Walkthrough = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  btnStyle:{
+    backgroundColor:colors.themeBlue,
+    borderRadius:width * 0.8,
+    width : width * 0.7
+  },
+  btnTextStyle: {
+    color:'white',
+    fontFamily:"Montserrat-SemiBold"
+  },
   image: {
     width: width,
     height: height,

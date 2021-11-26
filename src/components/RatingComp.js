@@ -9,8 +9,6 @@ const {width, height} = Dimensions.get('window');
 const RatingComp = ({onclick}) => {
   return (
     <Rating
-      showRating
-      style={{marginTop: height * 0.1}}
       type="star"
       onFinishRating = {onclick()}
       fractions={true}

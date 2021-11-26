@@ -14,6 +14,7 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
+import colors from '../assets/colors';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -30,7 +31,7 @@ const ForgotPassword = ({navigation}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>
-        <Heading title="FORGOT PASSWORD" />
+        <Heading title="FORGOT PASSWORD" fontType='extra-bold' passedStyle={styles.heading}/>
 
         <View style={styles.inputBoxes}>
         <Inputbox
@@ -53,6 +54,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  heading: {
+    color: colors.themeBlue,
+    fontSize:width * 0.1,
+    paddingHorizontal:width * 0.1,
+    textAlign:'center',
+    lineHeight: height * 0.07,
   },
   horizontalLinePosition: {
     flexDirection: 'row',

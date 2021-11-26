@@ -13,6 +13,8 @@ import Button from '../components/Button';
 import Inputbox from '../components/Inputbox';
 import logo from '../assets/run-matter-logo.png';
 import background_img from '../assets/backgroung-image.png';
+import colors from '../assets/colors';
+import Heading from '../components/Heading';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -45,7 +47,7 @@ const LogIn = ({navigation}) => {
           <Inputbox
             value={email}
             setTextValue={setEmail}
-            placeholderTilte="Email"
+            placeholderTilte="Username"
           />
           <Inputbox
             value={password}
@@ -54,23 +56,41 @@ const LogIn = ({navigation}) => {
             isSecure={true}
           />
         </View>
-        <Button title="Login" onBtnPress={() => _onPressLogIn()} />
+        <Button
+          title="Login"
+          onBtnPress={() => _onPressLogIn()}
+          isBgColor={false}
+          btnStyle={styles.btnStyle}
+          btnTextStyle={styles.btnTextStyle}
+        />
         <View
           style={{
             flexDirection: 'row',
             marginBottom: 10,
             justifyContent: 'center',
           }}>
-          <Text>Forgot Password?</Text>
+          <Heading
+            title="Forgot Password?"
+            passedStyle={styles.forgetPass}
+            fontType="medium"
+          />
           <TouchableOpacity onPress={() => _onPresspassword()}>
-            <Text style={{color: 'blue'}}> Click Here</Text>
+            <Heading
+              passedStyle={styles.clickHere}
+              title="Click Here"
+              fontType="semi-bold"
+            />
           </TouchableOpacity>
         </View>
 
         <View style={styles.horizontalLinePosition}>
           <View style={styles.horizontalLine} />
           <View>
-            <Text style={{width: 30, textAlign: 'center'}}>Or</Text>
+            <Heading
+              passedStyle={styles.orStyle}
+              fontType="medium"
+              title="Or"
+            />
           </View>
           <View style={styles.horizontalLine} />
         </View>
@@ -79,6 +99,8 @@ const LogIn = ({navigation}) => {
             title="Sign Up Now"
             onBtnPress={() => _onPressSignUp()}
             isBgColor={false}
+            btnStyle={styles.btnSignUpStyle}
+            btnTextStyle={styles.btnSignUpTextStyle}
           />
         </View>
       </ImageBackground>
@@ -87,10 +109,47 @@ const LogIn = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  orStyle: {
+    fontSize: width * 0.03,
+    paddingHorizontal: width * 0.02,
+    textAlign: 'center',
+  },
+  btnStyle: {
+    backgroundColor: colors.themeBlue,
+    borderRadius: width * 0.8,
+    width: width * 0.8,
+  },
+  btnTextStyle: {
+    color: 'white',
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  forgetPass: {
+    color: 'rgba(0,0,0,0.7)',
+    fontSize: width * 0.035,
+  },
+
+  btnSignUpStyle: {
+    backgroundColor: 'transparent',
+    borderRadius: width * 0.8,
+    width: width * 0.8,
+    borderWidth:1,
+    borderColor:colors.themeBlue,
+  },
+  btnSignUpTextStyle: {
+    color: colors.themeBlue,
+    fontFamily: 'Montserrat-SemiBold',
+  },
+
+  clickHere: {
+    color: colors.themeBlue,
+    fontSize: width * 0.035,
+    marginLeft: width * 0.01,
+    textDecorationLine: 'underline',
+  },
   horizontalLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'gray',
     alignItems: 'center',
     justifyContent: 'center',
   },

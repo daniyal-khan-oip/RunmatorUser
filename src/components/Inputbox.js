@@ -18,15 +18,17 @@ const Inputbox = ({
   placeholderTilte,
   isSecure,
   keyboardType,
+  placeholderTextColor,
   passedStyle,
 }) => {
   return (
     <>
       <TextInput
-        style={[styles.input ,passedStyle]}
+        style={[styles.input, passedStyle]}
         onChangeText={setTextValue}
         value={value}
         placeholder={placeholderTilte}
+        placeholderTextColor={placeholderTextColor}
         secureTextEntry={isSecure || false}
         keyboardType={keyboardType || 'default'}
       />
@@ -43,7 +45,6 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.018,
     paddingLeft: 30,
     margin: 10,
-
   },
 });
 

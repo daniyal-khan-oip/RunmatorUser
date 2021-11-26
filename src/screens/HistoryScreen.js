@@ -29,40 +29,56 @@ const HistoryScreen = props => {
   return (
     <>
       <View style={styles.container}>
-        <Header showBack={true}  navigation={props.navigation} iconName='arrow-back'/>
+        {/* Header  */}
+        <Header
+          showBack={true}
+          navigation={props.navigation}
+          iconName="arrow-back"
+        />
+
+        {/* Screen Heading  */}
         <View style={{flexDirection: 'row'}}>
-          <Heading title="History" passedStyle={styles.heading} />
-        </View>
-        <View
-          style={[
-            styles.rowView,
-            {marginHorizontal: width * 0.05, marginVertical: height * 0.01},
-          ]}>
-          <Text style={styles.heading1}>Last Service</Text>
-          <Text style={styles.heading1}>Paid</Text>
-        </View>
-        <View style={{marginLeft: width * 0.04, marginRight: width * 0.09}}>
-          <FlatList
-            data={dummyData}
-            vertical
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item._id.toString()}
-            contentContainerStyle={{
-              marginHorizontal: width * 0.05,
-            }}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.rowView}
-                onPress={() => onItemPress(item, index)}>
-                <Text style={styles.textStyle}>{`${index + 1}. ${
-                  item.text
-                }`}</Text>
-                <Text style={styles.textStyle}>{`$${item.price}`}</Text>
-              </TouchableOpacity>
-            )}
+          <Heading
+            title="History"
+            passedStyle={styles.heading}
+            fontType="bold"
           />
         </View>
+
+        {/* Table Headings  */}
+        <View style={[styles.tableHeadings]}>
+          <Heading
+            passedStyle={styles.heading1}
+            title="Last Service"
+            fontType="bold"
+          />
+          <Heading passedStyle={styles.heading1} title="Paid" fontType="bold" />
+        </View>
+
+        <FlatList
+          data={dummyData}
+          vertical
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item._id.toString()}
+          contentContainerStyle={styles.flatListContentContainerStyle}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.rowView}
+              onPress={() => onItemPress(item, index)}>
+              <Heading
+                passedStyle={styles.textStyle}
+                title={`${index + 1}. ${item.text}`}
+                fontType="medium"
+              />
+              <Heading
+                passedStyle={styles.textStyle}
+                title={`$${item.price.toFixed(2)}`}
+                fontType="medium"
+              />
+            </TouchableOpacity>
+          )}
+        />
       </View>
       {isModalVisible && (
         <HistoryModal
@@ -85,27 +101,35 @@ const styles = StyleSheet.create({
   heading: {
     color: 'black',
     marginLeft: width * 0.08,
-    fontSize: width * 0.11,
+    fontSize: width * 0.1,
     marginTop: height * 0.04,
-    fontWeight: 'bold',
   },
   heading1: {
     marginTop: height * 0.05,
-    marginLeft: width * 0.04,
-    marginRight: width * 0.09,
+    // marginLeft: width * 0.04,
+    // marginRight: width * 0.09,
     fontSize: width * 0.06,
-    fontWeight: '800',
     color: 'black',
   },
   rowView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: height * 0.013,
+  },
+  flatListContentContainerStyle: {
+    marginHorizontal: width * 0.1,
+  },
+  tableHeadings: {
+    marginHorizontal: width * 0.1,
+    marginVertical: height * 0.01,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingVertical: height * 0.009,
   },
   textStyle: {
-    color: 'black',
+    color: 'rgba(0,0,0,0.7)',
     textTransform: 'capitalize',
-    fontSize: width * 0.05,
+    fontSize: width * 0.045,
   },
 });
 

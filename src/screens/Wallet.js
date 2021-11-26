@@ -26,13 +26,22 @@ const HistoryScreen = props => {
           iconName="arrow-back"
         />
         <View style={{flexDirection: 'row'}}>
-          <Heading title="Wallet" passedStyle={styles.heading} />
+          <Heading
+            title="Wallet"
+            passedStyle={styles.heading}
+            fontType="bold"
+          />
         </View>
-        <Text style={{marginLeft: width * 0.08, marginTop: height * 0.03}}>
-          Total Amount in account
-        </Text>
-          <Text style={styles.amount}>${amount}</Text>
-
+        <Heading
+          passedStyle={styles.totalAmountInAcc}
+          title="Total amount in account"
+          fontType="medium"
+        />
+        <Heading
+          passedStyle={styles.amount}
+          title={`$${amount}`}
+          fontType="bold"
+        />
       </View>
     </>
   );
@@ -47,11 +56,15 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.08,
     marginTop: height * 0.04,
   },
-
+  totalAmountInAcc: {
+    marginLeft: width * 0.08,
+    marginTop: height * 0.03,
+    color: 'rgba(0,0,0,0.7)',
+    fontSize: width * 0.05,
+  },
   amount: {
     color: colors.themeBlue,
-    fontSize: height * 0.06,
-    fontWeight: 'bold',
+    fontSize: height * 0.05,
     marginLeft: width * 0.08,
   },
 });

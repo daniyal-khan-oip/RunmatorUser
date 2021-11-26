@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import colors from '../assets/colors';
 import IconComp from '../components/IconComp';
+import Heading from './Heading';
 
 const {width, height} = Dimensions.get('window');
 
@@ -19,8 +20,16 @@ const Header = ({showBack, title, iconName, navigation, passedStyle}) => {
       {showBack ? (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <View style={styles.rowView}>
-            <IconComp iconName={iconName} type="MaterialIcons" />
-            <Text style={styles.textStyle}>Back</Text>
+            <IconComp
+              iconName={iconName}
+              type="MaterialIcons"
+              passedStyle={styles.backIconStyle}
+            />
+            <Heading
+              passedStyle={[styles.textStyle]}
+              title="Back"
+              fontType="bold"
+            />
           </View>
         </TouchableOpacity>
       ) : (
@@ -31,7 +40,7 @@ const Header = ({showBack, title, iconName, navigation, passedStyle}) => {
               type="MaterialIcons"
               passedStyle={styles.iconStyle}
             />
-            <Text style={styles.textStyle}>{title}</Text>
+            <Heading passedStyle={styles.textStyle} title={title} fontType='bold'/>
           </View>
         </TouchableOpacity>
       )}
@@ -54,6 +63,11 @@ const styles = StyleSheet.create({
     paddingRight: width * 0.02,
     fontSize: width * 0.1,
   },
+  backIconStyle: {
+    color: colors.themeBlue,
+    paddingRight: width * 0.02,
+    fontSize: width * 0.07,
+  },
   rowView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -64,8 +78,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: colors.themeBlue,
-    fontWeight: '800',
-    fontSize: width * 0.05,
+    fontSize: width * 0.06,
   },
   titleStyle: {
     color: colors.themeBlue,
