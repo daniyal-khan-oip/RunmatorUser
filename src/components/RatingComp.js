@@ -1,17 +1,18 @@
 import React from 'react';
 import {Rating} from 'react-native-ratings';
 
-import {Dimensions,TouchableOpacity, Text} from 'react-native';
+import {Dimensions, TouchableOpacity, Text} from 'react-native';
 import {useState} from 'react';
 
 const {width, height} = Dimensions.get('window');
 
-const RatingComp = ({onclick}) => {
+const RatingComp = ({rateValue, onPress}) => {
   return (
     <Rating
       type="star"
-      onFinishRating = {onclick()}
+      onFinishRating={rating => onPress(rating)}
       fractions={true}
+      startingValue={rateValue}
     />
   );
 };

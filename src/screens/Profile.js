@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import Header from '../components/Header';
 
@@ -86,79 +87,84 @@ const Profile = props => {
         iconSize={25}
       />
 
-      {/* Page Heading */}
-      <Heading
-        title="Profile Settings"
-        passedStyle={styles.heading}
-        fontType="bold"
-      />
-
-      {/* Image Container  */}
-      <View style={styles.boxContainer}>
-        {image ? (
-          <Image
-            source={{
-              uri: `data:${image.assets[0].type};base64,${image.assets[0].base64}`,
-            }}
-            style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
-            // style={styles.imageStyle}
-          />
-        ) : (
-          <Heading
-            passedStyle={styles.usernameWordsStyle}
-            title={acronym}
-            fontType="bold"
-          />
-        )}
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: height * 0.17,
-            backgroundColor: 'blue',
-          }}
-          onPress={() => uploadPhoto()}>
-          <IconComp
-            iconName="camera-alt"
-            type={'MaterialIcons'}
-            passedStyle={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Username Container  & Password */}
-      <View style={styles.usernameViewStyle}>
-        <Heading title={displayName} passedStyle={styles.usernameStyle} fontType="medium"/>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => _onPressEditName()}>
-          <IconComp
-            iconName="pencil"
-            type="MaterialCommunityIcons"
-            passedStyle={styles.pencilIcon}
-          />
-        </TouchableOpacity>
-      </View>
-      <Inputbox
-        passedStyle={styles.border_line}
-        placeholderTilte="Change Password"
-        placeholderTextColor="rgba(0,0,0,0.7)"
-      />
-      <Inputbox
-        passedStyle={styles.border_line}
-        placeholderTilte="Confirm Password"
-        placeholderTextColor="rgba(0,0,0,0.7)"
-      />
-      {/* Save Button  */}
-      <View style={styles.btnContainer}>
-        <Button
-          title="SAVE"
-          btnStyle={styles.btnStyle}
-          onBtnPress={() => pressed()}
-          btnTextStyle={styles.btnTextColor}
-          isBgColor={false}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Page Heading */}
+        <Heading
+          title="Profile Settings"
+          passedStyle={styles.heading}
+          fontType="bold"
         />
-      </View>
 
+        {/* Image Container  */}
+        <View style={styles.boxContainer}>
+          {image ? (
+            <Image
+              source={{
+                uri: `data:${image.assets[0].type};base64,${image.assets[0].base64}`,
+              }}
+              style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
+              // style={styles.imageStyle}
+            />
+          ) : (
+            <Heading
+              passedStyle={styles.usernameWordsStyle}
+              title={acronym}
+              fontType="bold"
+            />
+          )}
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: height * 0.17,
+              backgroundColor: 'blue',
+            }}
+            onPress={() => uploadPhoto()}>
+            <IconComp
+              iconName="camera-alt"
+              type={'MaterialIcons'}
+              passedStyle={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Username Container  & Password */}
+        <View style={styles.usernameViewStyle}>
+          <Heading
+            title={displayName}
+            passedStyle={styles.usernameStyle}
+            fontType="medium"
+          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => _onPressEditName()}>
+            <IconComp
+              iconName="pencil"
+              type="MaterialCommunityIcons"
+              passedStyle={styles.pencilIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        <Inputbox
+          passedStyle={styles.border_line}
+          placeholderTilte="Change Password"
+          placeholderTextColor="rgba(0,0,0,0.7)"
+        />
+        <Inputbox
+          passedStyle={styles.border_line}
+          placeholderTilte="Confirm Password"
+          placeholderTextColor="rgba(0,0,0,0.7)"
+        />
+        {/* Save Button  */}
+        <View style={styles.btnContainer}>
+          <Button
+            title="SAVE"
+            btnStyle={styles.btnStyle}
+            onBtnPress={() => pressed()}
+            btnTextStyle={styles.btnTextColor}
+            isBgColor={false}
+          />
+        </View>
+      </ScrollView>
       {isModalVisible && (
         <DisplayNameChangeModal
           value={displayName}
@@ -191,11 +197,12 @@ const styles = StyleSheet.create({
   },
   btnTextColor: {
     color: 'white',
-    fontSize:width * 0.045
+    fontSize: width * 0.045,
   },
   btnContainer: {
     alignItems: 'center',
     marginTop: height * 0.05,
+    // paddingBottom: 100,
   },
   horizontalLine: {
     flex: 1,
@@ -254,7 +261,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.12)',
     width: width * 0.95,
-    fontFamily:"Montserrat-Regular"
+    fontFamily: 'Montserrat-Regular',
   },
   imageStyle: {
     width: width * 0.5,

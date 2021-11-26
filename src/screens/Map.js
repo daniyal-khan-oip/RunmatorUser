@@ -1,11 +1,10 @@
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
   Dimensions,
   View,
-  Text,
   TouchableOpacity,
-  ImageBackground,
   Linking,
   Image,
 } from 'react-native';
@@ -16,17 +15,12 @@ import userimg from '../assets/user_image.png';
 import IconComp from '../components/IconComp';
 import Header from '../components/Header';
 import Heading from '../components/Heading';
-import GooglePlacesInput from '../components/GooglePlacesInput';
-import ConfirmationPopupComp from '../components/ConfirmationPopupComp';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from '../components/BottomSheet';
-import {BlurView} from '@react-native-community/blur';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const Map = ({navigation}) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('030322221112');
   const sheetRef = useRef();
@@ -52,82 +46,98 @@ const Map = ({navigation}) => {
     console.log('Curr location');
   };
   return (
-    <View>
+    <View style={styles.container}>
       <Image source={Map_img} style={StyleSheet.absoluteFillObject} />
       <Header showBack={true} navigation={navigation} iconName="arrow-back" />
 
-      <View style={{alignItems: 'center'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginLeft: width * 0.05,
-          }}>
-          <GooglePlacesInput />
-          <IconComp
-            iconName="location-pin"
-            type={'MaterialIcons'}
-            passedStyle={{
-              marginRight: width * 0.87,
-              marginTop: height * 0.04,
-              color: 'grey',
+      <View style={styles.contentContainer}>
+        {/* Rider Search & Selected Rider View  */}
+        <View>
+          {/* Rider Search Component  */}
+          <GooglePlacesAutocomplete
+            placeholder="Enter Your Location"
+            onPress={(data, details = null) => {
+              // 'details' is provided when fetchDetails = true
+              console.log(data, details);
+            }}
+            query={{
+              key: 'YOUR API KEY',
+              language: 'en',
+            }}
+            renderLeftButton={() => (
+              <IconComp
+                iconName="location-pin"
+                type="Entypo"
+                passedStyle={styles.locationIcon}
+              />
+            )}
+            styles={{
+              textInputContainer: {
+                // marginTop: height * 0.02,
+                width: width * 0.9,
+                backgroundColor: 'white',
+                borderRadius: width * 0.025,
+                height: height * 0.084,
+              },
+              textInput: {
+                borderRadius: width * 0.025,
+                height: height * 0.084,
+                color: '#5d5d5d',
+                fontSize: width * 0.04,
+              },
             }}
           />
+
+          {/* Selected Rider Popup  */}
+          <TouchableOpacity style={styles.boxContainer} activeOpacity={0.8}>
+            <View style={styles.rowView}>
+              <Image source={userimg} />
+              <View>
+                <Heading
+                  passedStyle={styles.text}
+                  title={'Michael Reimer'}
+                  fontType="bold"
+                />
+                <Heading
+                  passedStyle={styles.textMechanic}
+                  title={'Mechanic'}
+                  fontType="medium"
+                />
+              </View>
+            </View>
+
+            <IconComp
+              iconName="chevron-with-circle-right"
+              type={'Entypo'}
+              passedStyle={styles.icon_style}
+            />
+          </TouchableOpacity>
         </View>
 
-        {/* Selected Rider Popup  */}
-        <TouchableOpacity style={styles.boxContainer} activeOpacity={0.8}>
-          <View style={styles.rowView}>
-            <Image source={userimg} />
-            <View>
-              <Heading
-                passedStyle={styles.text}
-                title={'Michael Reimer'}
-                fontType="bold"
-              />
-              <Heading
-                passedStyle={styles.textMechanic}
-                title={'Mechanic'}
-                fontType="medium"
-              />
-            </View>
-          </View>
+        {/* Current Location & Confirm Button Container  */}
+        <View>
+          {/* Current Location  */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => _onPressCurrentLoc}
+            style={styles.boxContainer2}>
+            <IconComp
+              iconName="my-location"
+              type={'MaterialIcons'}
+              passedStyle={{fontSize: width * 0.07}}
+            />
+          </TouchableOpacity>
 
-          <IconComp
-            iconName="chevron-with-circle-right"
-            type={'Entypo'}
-            passedStyle={styles.icon_style}
+          {/* Confirm Button  */}
+          <Button
+            title="CONFIRM"
+            onBtnPress={() => onItemPress()}
+            isBgColor={false}
+            btnStyle={styles.btnStyle}
+            btnTextStyle={styles.btnTextStyle}
           />
-        </TouchableOpacity>
-
-        {/* Current Location  */}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => _onPressCurrentLoc}
-          style={styles.boxContainer2}>
-          <IconComp
-            iconName="my-location"
-            type={'MaterialIcons'}
-            passedStyle={{fontSize: width * 0.07}}
-          />
-        </TouchableOpacity>
-
-        {/* Confirm Button  */}
-        <Button
-          title="CONFIRM"
-          onBtnPress={() => onItemPress()}
-          isBgColor={false}
-          btnStyle={styles.btnStyle}
-          btnTextStyle={styles.btnTextStyle}
-        />
+        </View>
       </View>
-      {isModalVisible && (
-        <ConfirmationPopupComp
-          data={modalData}
-          showModal={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-        />
-      )}
 
       {/* Bottom Sheet Component  */}
       <BottomSheet
@@ -140,10 +150,28 @@ const Map = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  locationIcon:{
+    color:'gray',
+    alignSelf:'center',
+    fontSize:width * 0.052,
+    paddingLeft: width * 0.03,
+    // backgroundColor:'red'
+  },
+  contentContainer: {
+    flex: 1,
+    marginHorizontal: width * 0.05,
+    justifyContent: 'space-between',
+    marginVertical: height * 0.03,
+  },
   btnStyle: {
     backgroundColor: colors.themeBlue,
     borderRadius: width * 0.02,
     width: width * 0.9,
+    margin: 0,
+    marginTop: height * 0.03,
   },
   rowView: {
     flexDirection: 'row',
@@ -167,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: width * 0.02,
     height: height * 0.13,
     width: width * 0.9,
-    marginTop: height * 0.02,
+    marginTop: height * 0.12,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -185,8 +213,8 @@ const styles = StyleSheet.create({
     height: height * 0.07,
     width: width * 0.15,
     alignItems: 'center',
+    alignSelf: 'flex-end',
     justifyContent: 'center',
-    marginTop: height * 0.45,
     // marginLeft: width * 0.6,
     shadowColor: '#000',
     shadowOffset: {
@@ -221,3 +249,23 @@ const styles = StyleSheet.create({
 });
 
 export default Map;
+
+{
+  /* <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginLeft: width * 0.05,
+        }}>
+        <GooglePlacesInput />
+        <IconComp
+          iconName="location-pin"
+          type={'MaterialIcons'}
+          passedStyle={{
+            marginRight: width * 0.87,
+            marginTop: height * 0.04,
+            color: 'grey',
+          }}
+        />
+      </View> */
+}
