@@ -1,8 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native';
 import colors from '../assets/colors';
+import IconComp from './IconComp';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+
 const Button = ({
   title,
   onBtnPress,
@@ -14,11 +17,9 @@ const Button = ({
     <TouchableOpacity
       activeOpacity={0.8}
       style={[
-        styles.btn,
+        styles.btn,btnStyle,
         isBgColor
           ? styles.btnWithBgColor
-          : btnStyle
-          ? btnStyle
           : styles.btnWithOutBgColor,
       ]}
       onPress={() => {
@@ -27,7 +28,6 @@ const Button = ({
       <Text
         style={[
           styles.text,
-
           isBgColor
             ? {color: 'white'}
             : btnTextStyle
@@ -37,6 +37,12 @@ const Button = ({
         ]}>
         {title}
       </Text>
+      <IconComp 
+      iconName={"exclamationcircle"} 
+      // iconSize={} 
+      type={"AntDesign"} 
+      // passedStyle={} 
+      />
     </TouchableOpacity>
   );
 };

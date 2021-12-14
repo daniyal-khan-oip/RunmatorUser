@@ -14,12 +14,17 @@ import {
   ScrollView,
 } from 'react-native';
 import colors from '../assets/colors';
+import {connect} from 'react-redux';
+import * as actions from '../store/Actions/index';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const Walkthrough = ({navigation}) => {
-  const _onPressSignUp = () => {
-    navigation.navigate('LogIn');
+
+const Walkthrough = ({navigation,is_walk_thorugh_seen}) => {
+  const _onPressGetStarted = () => {
+    is_walk_thorugh_seen().then(()=>{
+      navigation.navigate('LogIn')
+    })
   };
   return (
     <ImageBackground source={background_img} style={styles.image}>
@@ -27,8 +32,8 @@ const Walkthrough = ({navigation}) => {
         <View style={{marginVertical:height*0.2}}>
         <Button
             title="GET STARTED >"
-            onBtnPress={() => _onPressSignUp()}
-            isBgColor={false}
+            onBtnPress={() => _onPressGetStarted()}
+            isBgColor={true}
             btnStyle={styles.btnStyle}
             btnTextStyle={styles.btnTextStyle}
         />
@@ -60,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Walkthrough;
+export default connect(null,actions)(Walkthrough);

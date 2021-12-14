@@ -1,12 +1,5 @@
 import React from 'react';
-import {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  TextInput,
-} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';

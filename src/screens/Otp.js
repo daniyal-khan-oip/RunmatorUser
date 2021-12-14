@@ -3,6 +3,7 @@ import Heading from '../components/Heading';
 import Button from '../components/Button';
 import background_img from '../assets/backgroung-image.png';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import * as actions from '../store/Actions/index';
 
 import {
   StyleSheet,
@@ -15,23 +16,27 @@ import {
   ScrollView,
 } from 'react-native';
 import colors from '../assets/colors';
+import {connect} from 'react-redux';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const Otp = ({navigation}) => {
+
+const Otp = ({navigation, user_sign_up}) => {
   const OTP = '0000';
 
-  const _onPressSignUp = () => {
-    // if (cardnumber === '') {
-    //   alert('All fields required');
-    // } else {
-    navigation.navigate('Home');
-    // }
-  };
+  // const _onPressSignUp = () => {
+  //   // if (cardnumber === '') {
+  //   //   alert('All fields required');
+  //   // } else {
+  //   navigation.navigate('Home');
+  //   // }
+  // };
 
   const _onConfirmOtp = code => {
     if (code == OTP) {
       console.log(`Code is ${code}, you are good to go!`);
+      // navigation.navigate('home');
+      user_sign_up()
     } else {
       alert('Invalid OTP!');
     }
@@ -39,7 +44,11 @@ const Otp = ({navigation}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>
-        <Heading title="ENTER OTP CODE" passedStyle={styles.heading} fontType="extra-bold"/>
+        <Heading
+          title="ENTER OTP CODE"
+          passedStyle={styles.heading}
+          fontType="extra-bold"
+        />
 
         <View style={styles.inputBoxes}>
           <OTPInputView
@@ -73,9 +82,9 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: colors.themeBlue,
-    fontSize:width * 0.12,
-    paddingHorizontal:width * 0.1,
-    textAlign:'center',
+    fontSize: width * 0.12,
+    paddingHorizontal: width * 0.1,
+    textAlign: 'center',
     lineHeight: height * 0.07,
   },
   horizontalLinePosition: {
@@ -105,8 +114,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 0,
     borderRadius: width * 0.02,
-    color:colors?.themeBlue,
-    fontWeight:'500'
+    color: colors?.themeBlue,
+    fontWeight: '500',
   },
 
   underlineStyleHighLighted: {
@@ -114,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Otp;
+export default connect(null, actions)(Otp);

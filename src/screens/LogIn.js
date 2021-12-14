@@ -18,6 +18,7 @@ import Heading from '../components/Heading';
 import {connect} from 'react-redux';
 import * as actions from '../store/Actions/index';
 
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -67,7 +68,7 @@ const LogIn = ({navigation, UserReducer, user_login}) => {
         <Button
           title="Login"
           onBtnPress={() => _onPressLogIn()}
-          isBgColor={false}
+          isBgColor={true}
           btnStyle={styles.btnStyle}
           btnTextStyle={styles.btnTextStyle}
         />

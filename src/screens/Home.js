@@ -141,7 +141,7 @@ function Home({navigation}) {
         <Button
           title="View All Services"
           onBtnPress={() => _onPressSignUp()}
-          isBgColor={false}
+          isBgColor={true}
           btnStyle={styles.btnStyle}
           btnTextStyle={styles.btnTextStyle}
         />

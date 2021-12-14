@@ -13,9 +13,9 @@ import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
+import com.airbnb.android.react.maps.MapsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 public class MainApplication extends Application implements ReactApplication {
 
     private final ReactNativeHost mReactNativeHost =
@@ -24,16 +24,16 @@ public class MainApplication extends Application implements ReactApplication {
                 public boolean getUseDeveloperSupport() {
                     return BuildConfig.DEBUG;
                 }
-
                 @Override
                 protected List<ReactPackage> getPackages() {
                     @SuppressWarnings("UnnecessaryLocalVariable")
                     List<ReactPackage> packages = new PackageList(this).getPackages();
+                    new SplashScreenReactPackage();
+                    new VectorIconsPackage();
+                    new ReactNativePushNotificationPackage();
+                    new MapsPackage();
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     // packages.add(new MyReactNativePackage());
-//                    packages.add(new VectorIconsPackage());
-                    // new BlurViewPackage();
-//                    packages.add(new SplashScreenReactPackage());
                     return packages;
                 }
 

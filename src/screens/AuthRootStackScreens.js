@@ -16,13 +16,15 @@ import Wallet from './Wallet';
 import RateUs from './RateUs';
 import Profile from './Profile';
 import Map from './Map';
+import {connect} from 'react-redux';
+import * as actions from '../store/Actions/index';
 
 const Stack = createNativeStackNavigator();
 
-function AuthRootStackScreens() {
+function AuthRootStackScreens({UserReducer}) {
   return (
     <Stack.Navigator
-      initialRouteName="LogIn"
+      initialRouteName={UserReducer.isWalkThroughSeen ? "LogIn" : "Walkthrough"}
       screenOptions={{
         headerShown: false,
       }}>
@@ -43,4 +45,8 @@ function AuthRootStackScreens() {
   );
 }
 
-export default AuthRootStackScreens;
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
+
+export default connect(mapStateToProps, null)(AuthRootStackScreens);

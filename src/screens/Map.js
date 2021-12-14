@@ -16,6 +16,7 @@ import IconComp from '../components/IconComp';
 import Header from '../components/Header';
 import Heading from '../components/Heading';
 import BottomSheet from '../components/BottomSheet';
+import MapView, {Circle, Geojson, Marker, Polyline} from 'react-native-maps';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -47,9 +48,27 @@ const Map = ({navigation}) => {
   };
   return (
     <View style={styles.container}>
-      <Image source={Map_img} style={StyleSheet.absoluteFillObject} />
-      <Header showBack={true} navigation={navigation} iconName="arrow-back" />
+      {/* <Image source={Map_img} style={StyleSheet.absoluteFillObject} /> */}
+      {/* <MapView
+            style={{flex:1}}
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            /> */}
 
+      <Header showBack={true} navigation={navigation} iconName="arrow-back" />
+      <MapView
+            style={{width: '100%', height: '100%', position: 'absolute', top: 60}}
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            />
       <View style={styles.contentContainer}>
         {/* Rider Search & Selected Rider View  */}
         <View>
@@ -87,7 +106,6 @@ const Map = ({navigation}) => {
               },
             }}
           />
-
           {/* Selected Rider Popup  */}
           <TouchableOpacity style={styles.boxContainer} activeOpacity={0.8}>
             <View style={styles.rowView}>
@@ -132,7 +150,7 @@ const Map = ({navigation}) => {
           <Button
             title="CONFIRM"
             onBtnPress={() => onItemPress()}
-            isBgColor={false}
+            isBgColor={true}
             btnStyle={styles.btnStyle}
             btnTextStyle={styles.btnTextStyle}
           />
@@ -153,10 +171,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  locationIcon:{
-    color:'gray',
-    alignSelf:'center',
-    fontSize:width * 0.052,
+  locationIcon: {
+    color: 'gray',
+    alignSelf: 'center',
+    fontSize: width * 0.052,
     paddingLeft: width * 0.03,
     // backgroundColor:'red'
   },

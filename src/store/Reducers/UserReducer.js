@@ -1,7 +1,8 @@
-import {USER_LOGIN, USER_LOGOUT, USER_SIGNUP} from '../Actions/actionType';
+import {USER_LOGIN, USER_LOGOUT, USER_SIGNUP,SEEN_WALK_THROUGH} from '../Actions/actionType';
 
 const INITIAL_STATE = {
   isUserLogin: false,
+  isWalkThroughSeen: false,
 };
 
 export function UserReducer(state = INITIAL_STATE, action) {
@@ -9,9 +10,11 @@ export function UserReducer(state = INITIAL_STATE, action) {
     case USER_SIGNUP:
       return {...state, ...action.payload};
     case USER_LOGIN:
-      return {...action.payload};
+      return {...state,...action.payload};
     case USER_LOGOUT:
-      return {...action.payload};
+      return {...state,...action.payload};
+    case SEEN_WALK_THROUGH:
+      return {...state, ...action.payload};
     default:
       return state;
   }

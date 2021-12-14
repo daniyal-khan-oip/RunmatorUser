@@ -14,24 +14,25 @@ import Inputbox from '../components/Inputbox';
 import background_img from '../assets/backgroung-image.png';
 import Heading from '../components/Heading';
 import colors from '../assets/colors';
+import {StripeProvider} from '@stripe/stripe-react-native';
+import StripeCardComp from '../components/StripeCardComp';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const BankCardDetails = ({navigation, route}) => {
-  const [bankName, setBankName] = useState('');
-  const [branchCode, setBranchCode] = useState('');
-  const [accTitle, setAccTitle] = useState('');
-  const [accNum, setAccNum] = useState('');
-
+  const PUB_KEY_STRIPE =
+    'pk_test_51JVChuLcwRj59Ifbt31dML7GTICUq0WRuxkSvFr9cbrNEzJgLHt8GuDRpCldBdJ8uS8O4OFuXRbcfqEKNnTYHK5u007FIvTgKu';
+  // const [bankName, setBankName] = useState('');
+  // const [branchCode, setBranchCode] = useState('');
+  // const [accTitle, setAccTitle] = useState('');
+  // const [accNum, setAccNum] = useState('');
+  const [stripeGeneratedKey, setStripeGeneratedKey] = useState('');
   const _onPressSignUp = () => {
-    if (
-      bankName === '' ||
-      branchCode === '' ||
-      accNum === '' ||
-      accTitle === ''
-    ) {
-      alert('All fields required');
+    if (stripeGeneratedKey === '') {
+      alert('Card number is required');
     } else {
+      console.log(stripeGeneratedKey)
       navigation.navigate('Otp');
     }
   };
@@ -47,7 +48,21 @@ const BankCardDetails = ({navigation, route}) => {
           passedStyle={styles.heading}
         />
 
-        <View style={styles.inputBoxes}>
+        <View style={{flexDirection: 'row',marginHorizontal:10,marginTop:height *0.04}}>
+          <StripeProvider publishableKey={PUB_KEY_STRIPE}>
+            <StripeCardComp setId={setStripeGeneratedKey} />
+          </StripeProvider>
+        </View>
+        {/* <View style={styles.inputBoxes}> */}
+          {/* <StripeProvider publishableKey={PUB_KEY_STRIPE}>
+            <StripeCardComp />
+          </StripeProvider> */}
+          {/* <Inputbox
+            value={cardNumber}
+            setTextValue={setCardNumber}
+            placeholderTilte="Card Number"
+            isSecure={true}
+          />
           <Inputbox
             value={bankName}
             setTextValue={setBankName}
@@ -71,12 +86,12 @@ const BankCardDetails = ({navigation, route}) => {
             setTextValue={setAccNum}
             placeholderTilte="Account Number"
             isSecure={true}
-          />
-        </View>
+          /> */}
+        {/* </View> */}
         <Button
           title="Sign Up"
           onBtnPress={() => _onPressSignUp()}
-          isBgColor={false}
+          isBgColor={true}
           btnStyle={styles.btnStyle}
           btnTextStyle={styles.btnTextStyle}
         />

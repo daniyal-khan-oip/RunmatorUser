@@ -89,7 +89,7 @@ const SignUp = ({navigation}) => {
         <Button
           title="Next >"
           onBtnPress={() => _onPressSignUp()}
-          isBgColor={false}
+          isBgColor={true}
           btnStyle={styles.btnStyle}
           btnTextStyle={styles.btnTextStyle}
         />
