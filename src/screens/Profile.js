@@ -33,6 +33,10 @@ const Profile = props => {
   var matches = displayName?.match(/\b(\w)/g);
   var acronym = matches?.join('');
 
+  const onpress =()=>{
+    console.log("Pressed")
+  }
+
   // Change Display Name
   const _onPressEditName = () => {
     setIsModalVisible(true);
@@ -156,9 +160,9 @@ const Profile = props => {
           <Button
             title="SAVE"
             btnStyle={styles.btnStyle}
-            onBtnPress={() => pressed()}
+            onBtnPress={() => onpress()}
             btnTextStyle={styles.btnTextColor}
-            isBgColor={false}
+            isBgColor={true}
           />
         </View>
       </ScrollView>

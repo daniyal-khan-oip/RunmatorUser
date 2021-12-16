@@ -102,7 +102,7 @@ const BottomSheet = ({sheetRef, onPress, onPressCallNow}) => {
       <Button
         title="START TRACKING"
         onBtnPress={() => onPress()}
-        isBgColor={false}
+        isBgColor={true}
         btnTextStyle={styles.btnTextStyle}
         btnStyle={styles.btnStyle}
       />

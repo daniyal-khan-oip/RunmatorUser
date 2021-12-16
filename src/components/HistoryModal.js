@@ -100,7 +100,7 @@ const HistoryModal = ({data, showModal, setIsModalVisible}) => {
           <Button
             title={'GENERATE PDF'}
             onBtnPress={() => setIsModalVisible(false)}
-            isBgColor={false}
+            isBgColor={true}
             btnStyle={styles.btnStyle}
             btnTextStyle={styles.btnTextStyle}
           />

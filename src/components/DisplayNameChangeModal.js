@@ -43,7 +43,7 @@ const DisplayNameChangeModal = ({
               setValue(text);
               setIsModalVisible(false);
             }}
-            isBgColor={false}
+            isBgColor={true}
             btnStyle={styles.btnStyle}
             btnTextStyle={styles.btnTextStyle}
           />
@@ -53,7 +53,7 @@ const DisplayNameChangeModal = ({
             onBtnPress={() => {
               setIsModalVisible(false);
             }}
-            isBgColor={false}
+            isBgColor={true}
             btnStyle={styles.cancelBtnStyle}
             btnTextStyle={styles.cancelBtnTextStyle}
           />
