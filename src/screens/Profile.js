@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Header from '../components/Header';
 
@@ -17,25 +18,37 @@ import Button from '../components/Button';
 import Inputbox from '../components/Inputbox';
 // import ImagePicker from 'react-native-image-crop-picker';
 // test
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import DisplayNameChangeModal from '../components/DisplayNameChangeModal';
+import {connect} from 'react-redux';
+import * as actions from '../store/Actions/index';
 
 const {width, height} = Dimensions.get('window');
 
-const Profile = props => {
+const Profile = ({UserReducer, navigation, updateUserData}) => {
   // image state
-  const [image, setImage] = useState(null);
+  const [userImage, setUserImage] = useState(null);
+  const [image, setImage] = useState(UserReducer?.userData?.photo);
   // display name state
-  const [displayName, setDisplayName] = useState('Michael Reimer');
+  const [displayName, setDisplayName] = useState(
+    UserReducer?.userData?.username,
+  );
   // modal state
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   var matches = displayName?.match(/\b(\w)/g);
   var acronym = matches?.join('');
 
-  const onpress =()=>{
-    console.log("Pressed")
-  }
+  const _onPressSave =async () => {
+    let userData = {
+      photo: userImage
+        ? `data:${userImage.assets[0].type};base64,${userImage.assets[0].base64}`
+        : image,
+      username: displayName,
+    };
+    await updateUserData(userData);
+    Alert.alert("Success!",'Changes Saved!');
+  };
 
   // Change Display Name
   const _onPressEditName = () => {
@@ -60,7 +73,6 @@ const Profile = props => {
     };
 
     launchImageLibrary(options, response => {
-      console.log('Response = ', response);
       // var ArraySingleImage = []
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -77,7 +89,6 @@ const Profile = props => {
         setImage(response);
         // console.log(source)
         // ArraySingleImage.push(source)
-        console.log(response.assets);
       }
     });
   };
@@ -87,7 +98,7 @@ const Profile = props => {
       {/* Header  */}
       <Header
         showBack={true}
-        navigation={props.navigation}
+        navigation={navigation}
         iconName="arrow-back"
         iconSize={25}
       />
@@ -147,11 +158,13 @@ const Profile = props => {
         </View>
         <Inputbox
           passedStyle={styles.border_line}
+          isSecure={true}
           placeholderTilte="Change Password"
           placeholderTextColor="rgba(0,0,0,0.7)"
         />
         <Inputbox
           passedStyle={styles.border_line}
+          isSecure={true}
           placeholderTilte="Confirm Password"
           placeholderTextColor="rgba(0,0,0,0.7)"
         />
@@ -160,7 +173,7 @@ const Profile = props => {
           <Button
             title="SAVE"
             btnStyle={styles.btnStyle}
-            onBtnPress={() => onpress()}
+            onBtnPress={() => _onPressSave()}
             btnTextStyle={styles.btnTextColor}
             isBgColor={true}
           />
@@ -254,18 +267,19 @@ const styles = StyleSheet.create({
     padding: height * 0.01,
     borderRadius: width,
   },
-  iconTouchable:{
+  iconTouchable: {
     position: 'absolute',
     top: height * 0.18,
     right: width * 0.02,
     backgroundColor: 'blue',
-    borderRadius:width
+    borderRadius: width,
   },
   border_line: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.12)',
     width: width * 0.95,
     fontFamily: 'Montserrat-Regular',
+    fontSize:width * 0.04,
   },
   imageStyle: {
     width: width * 0.5,
@@ -279,4 +293,8 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.03,
   },
 });
-export default Profile;
+
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
+export default connect(mapStateToProps, actions)(Profile);

@@ -48,7 +48,11 @@ const HistoryModal = ({data, showModal, setIsModalVisible}) => {
             />
             <Heading
               passedStyle={styles.valueWithTopSpace}
-              title={data?.location}
+              title={`${
+                data?.location.length > 80
+                  ? `${data?.location.substring(0, 80)}...`
+                  : data?.location
+              }`}
               fontType="regular"
             />
 
@@ -150,6 +154,6 @@ const styles = StyleSheet.create({
   },
   btnTextStyle: {
     color: 'white',
-    fontSize: width * 0.045
+    fontSize: width * 0.045,
   },
 });

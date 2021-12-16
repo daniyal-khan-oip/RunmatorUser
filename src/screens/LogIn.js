@@ -18,26 +18,29 @@ import Heading from '../components/Heading';
 import {connect} from 'react-redux';
 import * as actions from '../store/Actions/index';
 
-
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const LogIn = ({navigation, UserReducer, user_login}) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const _onPressLogIn = () => {
-    if (email === '' || password === '') {
+    if (username === '' || password === '') {
       alert('Both fields required');
-    } else if (email === 'admin' || password === 'admin') {
-      console.log(UserReducer);
-      user_login({email, password}).then(() => {
-        console.log('work');
+    } else if (username === 'admin' || password === 'admin') {
+      user_login({
+        userData: {
+          username: username === 'admin' ? 'Michael Reiner' : username,
+        },
+        accessToken: 'TgvD65JmyrtprreASrrHBV64VB3v3B6apsh3gfNvf35jh7H',
+      }).then(() => {
+        // console.log('work');
       });
     } else {
       // navigation.navigate('Home');
       alert('Invalid Credentials');
-      // console.log(email);
+      // console.log(username);
     }
   };
   const _onPressSignUp = () => {
@@ -50,12 +53,12 @@ const LogIn = ({navigation, UserReducer, user_login}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>
-        <Image source={logo} style={styles.logo} resizeMode="contain"/>
+        <Image source={logo} style={styles.logo} resizeMode="contain" />
 
         <View style={styles.inputBoxes}>
           <Inputbox
-            value={email}
-            setTextValue={setEmail}
+            value={username}
+            setTextValue={setUsername}
             placeholderTilte="Username"
           />
           <Inputbox

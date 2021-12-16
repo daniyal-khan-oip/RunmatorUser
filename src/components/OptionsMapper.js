@@ -31,7 +31,9 @@ const OptionsMapper = ({item, index, onPress}) => {
       <View style={styles.texticonhandler}>
         <Heading
           passedStyle={styles.text}
-          title={item.text}
+          title={
+            item.text.length > 9 ? `${item.text.substring(0, 9)}...` : item.text
+          }
           fontType="bold"
         />
         <IconComp

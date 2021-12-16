@@ -9,13 +9,13 @@ import messaging from '@react-native-firebase/messaging';
 
 
 const MainNavigator = ({UserReducer}) => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(UserReducer?.accessToken);
   const [loading, setLoading] = useState(false);
 
+  console.log(UserReducer?.isUserLogin)
   useEffect(() => {
-    if (UserReducer.isUserLogin) {
-      console.log(UserReducer, '--------------------------------');
-      setToken('123');
+    if (UserReducer?.isUserLogin) {
+      // setToken('123');
       try {
         messaging()
           .getToken()
@@ -71,7 +71,7 @@ const MainNavigator = ({UserReducer}) => {
   } else {
     return (
       <NavigationContainer>
-        {UserReducer.isUserLogin ? (
+        {UserReducer?.isUserLogin ? (
           // token != null || token != undefined
           <MainAppScreens />
         ) : (

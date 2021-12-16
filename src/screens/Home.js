@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ScrollView,LogBox,
+  ScrollView,
+  LogBox,
   FlatList,
 } from 'react-native';
 import Heading from '../components/Heading';
@@ -20,21 +21,21 @@ import BoxComp from '../components/BoxComp';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import OptionsMapper from '../components/OptionsMapper';
-
+import * as actions from '../store/Actions/index';
+import {connect} from 'react-redux';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-function Home({navigation}) {
+function Home({navigation, UserReducer}) {
+  console.log(UserReducer)
   const [options, setOptions] = useState(dummyOptions);
-  let name = 'Michael';
-
+  let name = UserReducer?.userData?.username?.split(' ')[0];
   // Options Handler
   const _onPressOptions = (item, index) => {
     navigation.navigate('Map');
   };
-
 
   const _onPressSignUp = () => {
     navigation.navigate('AllServices');
@@ -43,19 +44,6 @@ function Home({navigation}) {
   return (
     <View style={styles.container}>
       <Header title="Menu" navigation={navigation} />
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        nestedScrollEnabled={true}> */}
-      {/* <Image source={wave} style={styles.img_wave} />
-
-      <View style={{flexDirection: 'row'}}>
-        <Heading title="Hello," passedStyle={styles.heading} fontType="bold" />
-        <Heading
-          title={name}
-          passedStyle={styles.heading_username}
-          fontType="bold-italic"
-        />
-      </View> */}
 
       {/* Features FlatList  */}
       <FlatList
@@ -69,7 +57,11 @@ function Home({navigation}) {
           <>
             <Image source={wave} style={styles.img_wave} />
 
-            <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                flexDirection: name?.length > 7 ? 'column' : 'row',
+                width: width * 0.8,
+              }}>
               <Heading
                 title="Hello,"
                 passedStyle={styles.heading}
@@ -90,7 +82,6 @@ function Home({navigation}) {
         renderItem={({item, index}) => (
           <OptionsMapper item={item} index={index} onPress={_onPressOptions} />
         )}
-        // ListFooterComponent={ () => }
       />
       {/* 
         Ahmed Code Here:::--
@@ -215,8 +206,10 @@ const styles = StyleSheet.create({
     marginTop: height * 0.01,
   },
 });
-
-export default Home;
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
+export default connect(mapStateToProps, actions)(Home);
 
 const dummyOptions = [
   {

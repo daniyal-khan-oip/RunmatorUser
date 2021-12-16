@@ -21,9 +21,9 @@ import {connect} from 'react-redux';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const Otp = ({navigation, user_sign_up}) => {
+const Otp = ({navigation, user_sign_up, route}) => {
   const OTP = '0000';
-
+console.log(route?.params)
   // const _onPressSignUp = () => {
   //   // if (cardnumber === '') {
   //   //   alert('All fields required');
@@ -36,7 +36,12 @@ const Otp = ({navigation, user_sign_up}) => {
     if (code == OTP) {
       console.log(`Code is ${code}, you are good to go!`);
       // navigation.navigate('home');
-      user_sign_up()
+      user_sign_up({
+        userData: {
+          username:
+            route?.params?.username === 'admin' ? 'Michael Reiner' : route?.params?.username,
+        },
+      });
     } else {
       alert('Invalid OTP!');
     }

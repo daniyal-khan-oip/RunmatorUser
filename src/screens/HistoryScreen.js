@@ -68,7 +68,11 @@ const HistoryScreen = props => {
               onPress={() => onItemPress(item, index)}>
               <Heading
                 passedStyle={styles.textStyle}
-                title={`${index + 1}. ${item.text}`}
+                title={`${index + 1}. `.concat(
+                  item.text.length > 20
+                    ? `${item.text.substring(0, 20)}...`
+                    : item.text,
+                )}
                 fontType="medium"
               />
               <Heading

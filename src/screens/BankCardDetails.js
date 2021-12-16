@@ -21,6 +21,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const BankCardDetails = ({navigation, route}) => {
+  
   const PUB_KEY_STRIPE =
     'pk_test_51JVChuLcwRj59Ifbt31dML7GTICUq0WRuxkSvFr9cbrNEzJgLHt8GuDRpCldBdJ8uS8O4OFuXRbcfqEKNnTYHK5u007FIvTgKu';
   // const [bankName, setBankName] = useState('');
@@ -33,7 +34,7 @@ const BankCardDetails = ({navigation, route}) => {
       alert('Card number is required');
     } else {
       console.log(stripeGeneratedKey)
-      navigation.navigate('Otp');
+      navigation.navigate('Otp',route.params);
     }
   };
 

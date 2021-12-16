@@ -76,7 +76,6 @@ const TestMap = ({navigation}) => {
           </Text>
         </View>
       </View> */}
-      {/* -------------------------------------- */}
       <View style={styles.container}>
         <Header showBack={true} navigation={navigation} iconName="arrow-back" />
         {/* <GooglePlacesAutocomplete

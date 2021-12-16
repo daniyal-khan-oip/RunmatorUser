@@ -24,7 +24,7 @@ const Inputbox = ({
   return (
     <>
       <TextInput
-        style={[styles.input, passedStyle]}
+        style={[styles.input, passedStyle && passedStyle]}
         onChangeText={setTextValue}
         value={value}
         placeholder={placeholderTilte}
