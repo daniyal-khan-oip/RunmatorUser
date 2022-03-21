@@ -1,18 +1,26 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  BackHandler,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import AuthRootStackScreens from './AuthRootStackScreens';
 import MainAppScreens from './MainAppScreens';
-import PushNotification from "react-native-push-notification";
+import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
+import AlertModal from '../components/AlertModal';
+import * as actions from '../store/Actions/index';
 
-
-const MainNavigator = ({UserReducer}) => {
+const MainNavigator = ({UserReducer, setErrorModal, getCurrentLocation}) => {
   const [token, setToken] = useState(UserReducer?.accessToken);
   const [loading, setLoading] = useState(false);
+  const [granted, setGranted] = useState(false);
 
-  console.log(UserReducer?.isUserLogin)
   useEffect(() => {
     if (UserReducer?.isUserLogin) {
       // setToken('123');
@@ -21,7 +29,7 @@ const MainNavigator = ({UserReducer}) => {
           .getToken()
           .then(token => {
             // setFCMToken(token);
-            console.log(token, 'FCM TOKEN');
+            // console.log(token, 'FCM TOKEN');
           });
         messaging().onNotificationOpenedApp(remoteMessage => {
           console.log(
@@ -41,8 +49,7 @@ const MainNavigator = ({UserReducer}) => {
           });
         const unsubscribe = messaging().onMessage(async remoteMessage => {
           console.log(remoteMessage, 'AHSAN');
-          if(remoteMessage.data.type == "student"){
-
+          if (remoteMessage.data.type == 'student') {
           }
 
           // notificationFunction(remoteMessage, onChangeMessageData);
@@ -66,18 +73,60 @@ const MainNavigator = ({UserReducer}) => {
     }
   }, [UserReducer]);
 
+  useEffect(() => {
+    if (granted) {
+      getCurrentLocation();
+    }
+  }, [granted]);
+
+  useEffect(() => {
+    async function requestLocationPermission() {
+      try {
+        const platformCheck = Platform.OS;
+        if (platformCheck != 'ios') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            setGranted(granted);
+          } else {
+            BackHandler.exitApp();
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+    requestLocationPermission();
+  }, []);
+
   if (loading) {
     return <Text>Loading</Text>;
   } else {
     return (
-      <NavigationContainer>
-        {UserReducer?.isUserLogin ? (
-          // token != null || token != undefined
-          <MainAppScreens />
-        ) : (
-          <AuthRootStackScreens />
+      <>
+        <NavigationContainer>
+          {UserReducer?.isUserLogin ? (
+            // token != null || token != undefined
+            <MainAppScreens />
+          ) : (
+            <AuthRootStackScreens />
+          )}
+        </NavigationContainer>
+        {UserReducer?.errorModal?.status && (
+          <AlertModal
+            onPress={() => {
+              if (UserReducer?.errorModal?.onPress) {
+                UserReducer?.errorModal?.onPress();
+              }
+              setErrorModal();
+            }}
+            title={UserReducer?.errorModal?.title}
+            message={UserReducer?.errorModal?.msg}
+            isModalVisible={UserReducer?.errorModal?.status}
+          />
         )}
-      </NavigationContainer>
+      </>
     );
   }
 };
@@ -87,4 +136,4 @@ const mapStateToProps = ({UserReducer}) => {
   return {UserReducer};
 };
 
-export default connect(mapStateToProps, null)(MainNavigator);
+export default connect(mapStateToProps, actions)(MainNavigator);

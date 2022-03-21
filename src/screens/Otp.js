@@ -21,7 +21,7 @@ import {connect} from 'react-redux';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const Otp = ({navigation, user_sign_up, route}) => {
+const Otp = ({navigation, userSignup, route}) => {
   const OTP = '0000';
 console.log(route?.params)
   // const _onPressSignUp = () => {
@@ -36,7 +36,7 @@ console.log(route?.params)
     if (code == OTP) {
       console.log(`Code is ${code}, you are good to go!`);
       // navigation.navigate('home');
-      user_sign_up({
+      userSignup({
         userData: {
           username:
             route?.params?.username === 'admin' ? 'Michael Reiner' : route?.params?.username,

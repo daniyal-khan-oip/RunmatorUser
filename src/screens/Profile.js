@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import Header from '../components/Header';
-
+import LottieView from 'lottie-react-native';
 import Heading from '../components/Heading';
 import IconComp from '../components/IconComp';
 import colors from '../assets/colors';
@@ -22,32 +22,48 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import DisplayNameChangeModal from '../components/DisplayNameChangeModal';
 import {connect} from 'react-redux';
 import * as actions from '../store/Actions/index';
+import {imageUrl} from '../configurations/config';
 
 const {width, height} = Dimensions.get('window');
 
-const Profile = ({UserReducer, navigation, updateUserData}) => {
+const Profile = ({UserReducer, navigation, updateProfile}) => {
+  const accessToken = UserReducer?.accessToken;
   // image state
+  const [isLoading, setIsLoading] = useState(false);
   const [userImage, setUserImage] = useState(null);
-  const [image, setImage] = useState(UserReducer?.userData?.photo);
+  const [image, setImage] = useState(UserReducer?.userData?.profile_image);
   // display name state
-  const [displayName, setDisplayName] = useState(
-    UserReducer?.userData?.username,
-  );
+  const [displayName, setDisplayName] = useState(UserReducer?.userData?.name);
   // modal state
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   var matches = displayName?.match(/\b(\w)/g);
   var acronym = matches?.join('');
 
-  const _onPressSave =async () => {
-    let userData = {
-      photo: userImage
-        ? `data:${userImage.assets[0].type};base64,${userImage.assets[0].base64}`
-        : image,
-      username: displayName,
-    };
-    await updateUserData(userData);
-    Alert.alert("Success!",'Changes Saved!');
+  const _onPressSave = async () => {
+    // setIsLoading(true);
+    // if (userImage !== null) {
+    //   const apiDataForImage = {
+    //     id: UserReducer?.userData?.id,
+    //     image: userImage,
+    //   };
+    //   await updateProfile(apiDataForImage, accessToken);
+    //   const userData = {
+    //     first_name: firstName,
+    //     last_name: lastName,
+    //     language: [language?.id],
+    //   };
+    //   await updateUserData(userData, accessToken, onSuccess);
+    //   setUserImage(null);
+    // } else {
+    //   const userData = {
+    //     first_name: firstName,
+    //     last_name: lastName,
+    //     language: [language?.id],
+    //   };
+    //   await updateUserData(userData, accessToken, onSuccess);
+    // }
+    // setIsLoading(false);
   };
 
   // Change Display Name
@@ -57,7 +73,6 @@ const Profile = ({UserReducer, navigation, updateUserData}) => {
 
   // Upload Photo
   const uploadPhoto = async () => {
-    console.log('Upload photo');
     var options = {
       title: 'Select Image',
       allowsEditing: true,
@@ -82,17 +97,40 @@ const Profile = ({UserReducer, navigation, updateUserData}) => {
         console.log('User tapped custom button: ', response.customButton);
         // SelectMultipleImage()
       } else {
+        setUserImage(response.assets[0]);
         // const source = {
         // for showing image
         //   uri: 'data:image/jpeg;base64,' + response.data
         // };
-        setImage(response);
         // console.log(source)
         // ArraySingleImage.push(source)
       }
     });
   };
 
+  const _onPressUpdateProfile = () => {
+    setIsLoading(true);
+    const apiDataForImage = {
+      id: UserReducer?.userData?.id,
+      image: userImage,
+      name: displayName,
+    };
+
+    updateProfile(apiDataForImage, accessToken, _onFailed).then(() => {
+      setIsLoading(false);
+      setUserImage(null);
+    });
+  };
+
+  // useEffect(() => {
+  //   if (userImage !== undefined && userImage !== null && userImage !== '') {
+  //     updateUserImage();
+  //   }
+  // }, [userImage]);
+
+  const _onFailed = () => {
+    setIsLoading(false);
+  };
   return (
     <View style={styles.container}>
       {/* Header  */}
@@ -103,82 +141,96 @@ const Profile = ({UserReducer, navigation, updateUserData}) => {
         iconSize={25}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Page Heading */}
-        <Heading
-          title="Profile Settings"
-          passedStyle={styles.heading}
-          fontType="bold"
-        />
-
-        {/* Image Container  */}
-        <View style={styles.boxContainer}>
-          {image ? (
-            <Image
-              source={{
-                uri: `data:${image.assets[0].type};base64,${image.assets[0].base64}`,
-              }}
-              style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
-              // style={styles.imageStyle}
-            />
-          ) : (
-            <Heading
-              passedStyle={styles.usernameWordsStyle}
-              title={acronym}
-              fontType="bold"
-            />
-          )}
-          <TouchableOpacity
-            style={styles.iconTouchable}
-            onPress={() => uploadPhoto()}>
-            <IconComp
-              iconName="camera-alt"
-              type={'MaterialIcons'}
-              passedStyle={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Username Container  & Password */}
-        <View style={styles.usernameViewStyle}>
+      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+      <View style={{justifyContent: 'space-between', flex: 1}}>
+        <View>
+          {/* Page Heading */}
           <Heading
-            title={displayName}
-            passedStyle={styles.usernameStyle}
-            fontType="medium"
+            title="Profile Settings"
+            passedStyle={styles.heading}
+            fontType="bold"
           />
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => _onPressEditName()}>
-            <IconComp
-              iconName="pencil"
-              type="MaterialCommunityIcons"
-              passedStyle={styles.pencilIcon}
+
+          {/* Image Container  */}
+          <View style={styles.boxContainer}>
+            {UserReducer?.userData?.profile_image || userImage ? (
+              <Image
+                source={{
+                  uri: userImage
+                    ? `data:${userImage.type};base64,${userImage.base64}`
+                    : `${imageUrl}${UserReducer?.userData?.profile_image.substring(
+                        0,
+                        5,
+                      )}`,
+                }}
+                style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
+              />
+            ) : (
+              <Heading
+                passedStyle={styles.usernameWordsStyle}
+                title={acronym}
+                fontType="bold"
+              />
+            )}
+            <TouchableOpacity
+              style={styles.iconTouchable}
+              onPress={() => uploadPhoto()}>
+              <IconComp
+                iconName="camera-alt"
+                type={'MaterialIcons'}
+                passedStyle={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* Username Container  & Password */}
+          <View style={styles.usernameViewStyle}>
+            <Heading
+              title={displayName}
+              passedStyle={styles.usernameStyle}
+              fontType="medium"
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => _onPressEditName()}>
+              <IconComp
+                iconName="pencil"
+                type="MaterialCommunityIcons"
+                passedStyle={styles.pencilIcon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <Inputbox
-          passedStyle={styles.border_line}
-          isSecure={true}
-          placeholderTilte="Change Password"
-          placeholderTextColor="rgba(0,0,0,0.7)"
-        />
-        <Inputbox
-          passedStyle={styles.border_line}
-          isSecure={true}
-          placeholderTilte="Confirm Password"
-          placeholderTextColor="rgba(0,0,0,0.7)"
-        />
+
         {/* Save Button  */}
         <View style={styles.btnContainer}>
-          <Button
-            title="SAVE"
-            btnStyle={styles.btnStyle}
-            onBtnPress={() => _onPressSave()}
-            btnTextStyle={styles.btnTextColor}
-            isBgColor={true}
-          />
+          {isLoading ? (
+            <View style={styles.loadingComponent}>
+              <Heading
+                title="Saving..."
+                passedStyle={styles.savingText}
+                fontType="semi-bold"
+              />
+              <LottieView
+                speed={1}
+                style={styles.lottieStyles}
+                autoPlay
+                loop
+                source={require('../assets/Lottie/loading-yellow.json')}
+              />
+            </View>
+          ) : (
+            <Button
+              title="SAVE"
+              btnStyle={styles.btnStyle}
+              onBtnPress={() => _onPressUpdateProfile()}
+              btnTextStyle={styles.btnTextColor}
+              isBgColor={true}
+            />
+          )}
         </View>
-      </ScrollView>
+      </View>
+      {/* </ScrollView> */}
       {isModalVisible && (
         <DisplayNameChangeModal
           value={displayName}
@@ -260,6 +312,8 @@ const styles = StyleSheet.create({
   usernameStyle: {
     fontSize: height * 0.031,
     marginRight: width * 0.01,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
   },
   icon: {
     backgroundColor: colors.themeBlue,
@@ -276,10 +330,11 @@ const styles = StyleSheet.create({
   },
   border_line: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.12)',
+
+    borderBottomColor: 'red',
     width: width * 0.95,
     fontFamily: 'Montserrat-Regular',
-    fontSize:width * 0.04,
+    fontSize: width * 0.04,
   },
   imageStyle: {
     width: width * 0.5,
@@ -291,6 +346,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: height * 0.03,
+  },
+  loadingComponent: {
+    borderRadius: width * 0.02,
+    position: 'relative',
+    borderWidth: 1,
+    borderColor: colors.themeBlue,
+    backgroundColor: colors.themeBlue,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: height * 0.08,
+    width: width * 0.8,
+    marginVertical: height * 0.02,
+  },
+  savingText: {
+    color: 'white',
+    position: 'absolute',
+    left: width * 0.24,
+    top: height * 0.022,
+    fontSize: width * 0.045,
+  },
+  lottieStyles: {
+    height: height * 0.1,
+    position: 'absolute',
+    left: width * 0.07,
+    right: 0,
+    top: height * -0.005,
   },
 });
 

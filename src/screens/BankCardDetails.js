@@ -11,97 +11,110 @@ import {
 } from 'react-native';
 import Button from '../components/Button';
 import Inputbox from '../components/Inputbox';
+import * as actions from '../store/Actions/index';
 import background_img from '../assets/backgroung-image.png';
 import Heading from '../components/Heading';
 import colors from '../assets/colors';
 import {StripeProvider} from '@stripe/stripe-react-native';
 import StripeCardComp from '../components/StripeCardComp';
+import {connect} from 'react-redux';
+import {PUB_KEY_STRIPE} from '../configurations/config';
+import LottieView from 'lottie-react-native';
+import Header from '../components/Header';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const BankCardDetails = ({navigation, route}) => {
-  
-  const PUB_KEY_STRIPE =
-    'pk_test_51JVChuLcwRj59Ifbt31dML7GTICUq0WRuxkSvFr9cbrNEzJgLHt8GuDRpCldBdJ8uS8O4OFuXRbcfqEKNnTYHK5u007FIvTgKu';
-  // const [bankName, setBankName] = useState('');
-  // const [branchCode, setBranchCode] = useState('');
-  // const [accTitle, setAccTitle] = useState('');
-  // const [accNum, setAccNum] = useState('');
+const BankCardDetails = ({navigation, route, userSignup, setErrorModal}) => {
+  const navParams = route.params;
+  console.log(navParams)
   const [stripeGeneratedKey, setStripeGeneratedKey] = useState('');
-  const _onPressSignUp = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const _onPressSignUp = async () => {
+    setIsLoading(true);
+    let data = {
+      ...navParams,
+      custoken: stripeGeneratedKey,
+    };
     if (stripeGeneratedKey === '') {
       alert('Card number is required');
     } else {
-      console.log(stripeGeneratedKey)
-      navigation.navigate('Otp',route.params);
+      await userSignup(data, _onSignUpFailed);
     }
   };
 
+  const _onSignUpFailed = () => {
+    setIsLoading(false);
+  };
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <ImageBackground source={background_img} style={styles.image}>
-        {/* <Text style={styles.text}>BANK ACCOUNT DETAILS</Text> */}
-
-        <Heading
-          title="BANK ACCOUNT DETAILS"
-          fontType="extra-bold"
-          passedStyle={styles.heading}
-        />
-
-        <View style={{flexDirection: 'row',marginHorizontal:10,marginTop:height *0.04}}>
-          <StripeProvider publishableKey={PUB_KEY_STRIPE}>
-            <StripeCardComp setId={setStripeGeneratedKey} />
-          </StripeProvider>
-        </View>
-        {/* <View style={styles.inputBoxes}> */}
-          {/* <StripeProvider publishableKey={PUB_KEY_STRIPE}>
-            <StripeCardComp />
-          </StripeProvider> */}
-          {/* <Inputbox
-            value={cardNumber}
-            setTextValue={setCardNumber}
-            placeholderTilte="Card Number"
-            isSecure={true}
-          />
-          <Inputbox
-            value={bankName}
-            setTextValue={setBankName}
-            placeholderTilte="Bank Name"
-            isSecure={true}
-          />
-          <Inputbox
-            value={branchCode}
-            setTextValue={setBranchCode}
-            placeholderTilte="Branch Code"
-            isSecure={true}
-          />
-          <Inputbox
-            value={accTitle}
-            setTextValue={setAccTitle}
-            placeholderTilte="Account Title"
-            isSecure={true}
-          />
-          <Inputbox
-            value={accNum}
-            setTextValue={setAccNum}
-            placeholderTilte="Account Number"
-            isSecure={true}
-          /> */}
-        {/* </View> */}
+    <ImageBackground source={background_img} style={styles.image}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Button
-          title="Sign Up"
-          onBtnPress={() => _onPressSignUp()}
-          isBgColor={true}
-          btnStyle={styles.btnStyle}
-          btnTextStyle={styles.btnTextStyle}
+          title="Back"
+          onBtnPress={() => navigation.goBack()}
+          isBgColor={false}
+          btnStyle={styles.backButton}
+          // btnTextStyle={styles.btnTextStyle}
         />
-      </ImageBackground>
-    </ScrollView>
+        <View style={styles.centerView}>
+          <Heading
+            title="BANK ACCOUNT DETAILS"
+            fontType="extra-bold"
+            passedStyle={styles.heading}
+          />
+
+          <View style={styles.stripeInputView}>
+            <StripeProvider publishableKey={PUB_KEY_STRIPE}>
+              <StripeCardComp setId={setStripeGeneratedKey} />
+            </StripeProvider>
+          </View>
+
+          {isLoading ? (
+            <LottieView
+              speed={1}
+              style={styles.lottieStyles}
+              autoPlay
+              colorFilters={'blue'}
+              loop
+              source={require('../assets/Lottie/loading-blue.json')}
+            />
+          ) : (
+            <Button
+              title="Sign Up"
+              onBtnPress={() => _onPressSignUp()}
+              isBgColor={true}
+              btnStyle={styles.btnStyle}
+              btnTextStyle={styles.btnTextStyle}
+            />
+          )}
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    width: width * 0.2,
+    borderWidth: 0,
+    margin: 0,
+    borderRadius: 0,
+  },
+  stripeInputView: {
+    flexDirection: 'row',
+    marginHorizontal: width * 0.03,
+    marginVertical: height * 0.03,
+  },
+  centerView: {
+    height: height,
+    alignItems:'center',
+    marginTop:height * 0.15,
+  },
+  lottieStyles: {
+    height: height * 0.12,
+    width: 100,
+  },
   heading: {
     color: colors.themeBlue,
     textAlign: 'center',
@@ -131,13 +144,7 @@ const styles = StyleSheet.create({
     width: width * 0.5,
   },
   image: {
-    justifyContent: 'center',
     width: width,
-    height: height,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  scrollview: {
     height: height,
   },
   inputBoxes: {
@@ -145,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BankCardDetails;
+export default connect(null, actions)(BankCardDetails);

@@ -54,7 +54,7 @@ const CustomButton = ({onPress, label, style, currentScreenName}) => {
 const CustomDrawer = ({navigation, routes, user_logout, UserReducer}) => {
   const isDrawerOpen = useDrawerStatus() === 'open';
   const history = navigation.getState().history;
-  let name = UserReducer?.userData?.username;
+  let name = UserReducer?.userData?.name;
   // let name = 'Christopher Ridiculous';
   let fname = name?.split(' ')[0];
   let lname = name?.split(' ')[1];
@@ -79,10 +79,10 @@ const CustomDrawer = ({navigation, routes, user_logout, UserReducer}) => {
             marginLeft: width * 0.04,
           },
         ]}>
-        {UserReducer?.userData?.photo ? (
+        {UserReducer?.userData?.profile_image ? (
           <Image
             source={{
-              uri: `data:${UserReducer?.userData?.photo?.assets[0].type};base64,${UserReducer?.userData?.photo?.assets[0].base64}`,
+              uri: `${UserReducer?.userData?.profile_image}`,
             }}
             style={styles.userImage}
           />

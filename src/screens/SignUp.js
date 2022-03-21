@@ -15,16 +15,20 @@ import logo from '../assets/run-matter-logo.png';
 import background_img from '../assets/backgroung-image.png';
 import Heading from '../components/Heading';
 import colors from '../assets/colors';
+import PhoneInput from 'react-native-phone-number-input';
+import {useRef} from 'react';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const SignUp = ({navigation}) => {
-  const [username, setUsername] = useState('');
+  const phoneInput = useRef(null);
+  const [username, setUsername] = useState('test');
   const [email, setEmail] = useState('');
-  const [phone_no, setPhone_no] = useState('');
-  const [password, setPassword] = useState('');
-  const [c_password, setC_Password] = useState('');
+  const [phone_no, setPhone_no] = useState('+92303214985');
+  const [password, setPassword] = useState('12345678');
+  const [c_password, setC_Password] = useState('12345678');
+  const [value, setValue] = useState('');
 
   const _onPressSignUp = () => {
     if (
@@ -35,15 +39,17 @@ const SignUp = ({navigation}) => {
       phone_no === ''
     ) {
       alert('All fields required');
+    } else if (password?.length < 8 || c_password.length < 8) {
+      alert('Passwords must be more than 8 characters.');
     } else if (password != c_password) {
       alert('Password does not match ');
     } else {
       navigation.navigate('BankCardDetails', {
-        username,
-        email,
-        phone_no,
-        password,
-        c_password,
+        email: email,
+        password: password,
+        name: username,
+        role_id: 2,
+        phone: phone_no,
       });
     }
   };
@@ -60,29 +66,72 @@ const SignUp = ({navigation}) => {
           <Inputbox
             value={username}
             setTextValue={setUsername}
-            placeholderTilte="UserName"
+            passedStyle={styles.inputBoxStyles}
+            placeholderTilte="Full Name"
           />
           <Inputbox
             value={email}
             setTextValue={setEmail}
-            placeholderTilte="Email"
+            passedStyle={styles.inputBoxStyles}
+            placeholderTilte="E-mail Address"
           />
-          <Inputbox
-            value={phone_no}
-            setTextValue={setPhone_no}
-            placeholderTilte="Phone #"
-            keyboardType={'numeric'}
+
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={value}
+            defaultCode="PK"
+            layout="first"
+            placeholder="Phone"
+            containerStyle={{
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: colors.themeBlue,
+              borderRadius: 50,
+              color: 'black',
+              height: height * 0.0755,
+              marginTop: height * 0.002,
+              marginBottom: height * 0.045,
+            }}
+            // flagButtonStyle={{
+            //   // backgroundColor: 'red',
+            //   width: width * 0.2,
+            // }}
+            // countryPickerButtonStyle={{
+            //   // backgroundColor: 'red',
+            //   // paddingRight: 10,
+            // }}
+            textInputStyle={{
+              color: 'black',
+              height: height * 0.07,
+              paddingVertical: 0,
+            }}
+            codeTextStyle={{
+              color: 'black',
+            }}
+            textContainerStyle={{
+              color: 'black',
+              borderRadius: 50,
+              // backgroundColor:'blue',
+            }}
+            onChangeText={text => {
+              setValue(text);
+            }}
+            onChangeFormattedText={text => {
+              setPhone_no(text);
+            }}
           />
           <Inputbox
             value={password}
             setTextValue={setPassword}
             placeholderTilte="Password"
+            passedStyle={styles.inputBoxStyles}
             isSecure={true}
           />
           <Inputbox
             value={c_password}
             setTextValue={setC_Password}
             placeholderTilte="Confirm Password"
+            passedStyle={styles.inputBoxStyles}
             isSecure={true}
           />
         </View>
@@ -133,6 +182,12 @@ const SignUp = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  inputBoxStyles: {
+    margin: 0,
+    borderWidth: 1,
+    borderRadius:50,
+    borderColor: colors.themeBlue,
+  },
   alreadyLabel: {
     fontSize: width * 0.034,
     color: 'rgba(0,0,0,.8)',

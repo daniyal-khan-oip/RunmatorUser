@@ -17,10 +17,9 @@ const Button = ({
     <TouchableOpacity
       activeOpacity={0.8}
       style={[
-        styles.btn,btnStyle,
-        isBgColor
-          ? styles.btnWithBgColor
-          : styles.btnWithOutBgColor,
+        styles.btn,
+        btnStyle,
+        isBgColor ? styles.btnWithBgColor : styles.btnWithOutBgColor && btnStyle,
       ]}
       onPress={() => {
         onBtnPress();
@@ -37,11 +36,11 @@ const Button = ({
         ]}>
         {title}
       </Text>
-      <IconComp 
-      iconName={"exclamationcircle"} 
-      // iconSize={} 
-      type={"AntDesign"} 
-      // passedStyle={} 
+      <IconComp
+        iconName={'exclamationcircle'}
+        // iconSize={}
+        type={'AntDesign'}
+        // passedStyle={}
       />
     </TouchableOpacity>
   );
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: width * 0.05,
     // fontWeight: 'bold',
-    fontFamily:'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
   },
   btn: {
     width: width * 0.8,

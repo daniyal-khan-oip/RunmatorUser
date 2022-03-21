@@ -7,7 +7,10 @@ import {
   Dimensions,
   TextInput,
   View,
+  TouchableWithoutFeedback,
 } from 'react-native';
+
+import IconComp from './IconComp';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -18,33 +21,89 @@ const Inputbox = ({
   placeholderTilte,
   isSecure,
   keyboardType,
+  isShowIcon,
+  names,
   placeholderTextColor,
+  onPressIcon,
+  iconStyle,
+  iconType,
+  isPassword,
+  iconWrapperStyle,
   passedStyle,
 }) => {
   return (
-    <>
+    <View style={{position: 'relative'}}>
       <TextInput
-        style={[styles.input, passedStyle && passedStyle]}
+        style={[
+          styles.input,
+          passedStyle && passedStyle,
+          // {marginHorizontal: width * 0.05},
+          isShowIcon && isPassword,
+        ]}
         onChangeText={setTextValue}
         value={value}
         placeholder={placeholderTilte}
-        placeholderTextColor={placeholderTextColor}
+        placeholderTextColor={placeholderTextColor || 'grey'}
         secureTextEntry={isSecure || false}
         keyboardType={keyboardType || 'default'}
       />
-    </>
+
+      {isShowIcon && isPassword ? (
+        <TouchableOpacity
+          style={[
+            {
+              position: 'absolute',
+              left: width * 0.75,
+              top: height * 0.046,
+              // paddingLeft: 10,
+            },
+            iconWrapperStyle && iconWrapperStyle,
+          ]}
+          onPress={() => onPressIcon()}>
+          <IconComp
+            iconName={names}
+            type={iconType || 'MaterialIcons'}
+            passedStyle={[
+              {
+                color: 'black',
+                marginLeft: isShowIcon && isPassword && width * 0.05,
+              },
+              iconStyle && iconStyle,
+            ]}
+          />
+        </TouchableOpacity>
+      ) : (
+        <IconComp
+          name={names}
+          type={'MaterialIcons'}
+          iconStyle={{
+            paddingLeft: isShowIcon && isPassword && width * 0.02,
+            position: 'absolute',
+            left: width * 0.75,
+            // paddingLeft: 10,
+            top: height * 0.046,
+          }}
+        />
+      )}
+    </View>
   );
 };
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: 'white',
-    width: width * 0.8,
+    flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 50,
-    justifyContent: 'center',
-    paddingVertical: height * 0.018,
-    paddingLeft: 30,
-    margin: 10,
+    borderWidth: 1,
+    fontFamily: 'Poppins-Regular',
+    borderColor: 'white',
+    borderRadius: 15,
+    color: 'black',
+    backgroundColor:'white',
+    width: width * 0.8,
+    margin: height * 0.025,
+    height: height * 0.075,
+    paddingRight: width * 0.07,
+    paddingLeft: width * 0.05,
+    fontSize: width * 0.045,
   },
 });
 

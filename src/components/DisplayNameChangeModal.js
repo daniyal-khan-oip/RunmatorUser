@@ -22,11 +22,7 @@ const DisplayNameChangeModal = ({
 }) => {
   const [text, setText] = useState(value);
   return (
-    <Modal
-      isVisible={isModalVisible}
-      swipeDirection={['up']}
-      onSwipeMove={p => setIsModalVisible(false)}
-      onBackButtonPress={p => setTimeout}>
+    <Modal isVisible={isModalVisible}>
       <View style={styles.container}>
         <Heading passedStyle={[styles.label]} title="Change Display Name" />
         <Inputbox
@@ -76,13 +72,13 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: '700',
     color: 'black',
-    fontSize: width * 0.05,
+    fontSize: width * 0.055,
   },
   inputStyle: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.12)',
     width: width * 0.8,
-    fontSize:width* 0.04,
+    fontSize: width * 0.045,
     marginLeft: 0,
     paddingLeft: 0,
     borderRadius: 0,
@@ -102,18 +98,18 @@ const styles = StyleSheet.create({
   },
   btnTextStyle: {
     color: 'white',
-    fontSize: width * 0.04,
+    fontSize: width * 0.035,
   },
   cancelBtnTextStyle: {
     color: colors.themeBlue,
-    fontSize: width * 0.04,
+    fontSize: width * 0.035,
   },
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     alignSelf: 'center',
     // backgroundColor: 'red',
-    width : width * 0.75,
+    width: width * 0.75,
   },
 });

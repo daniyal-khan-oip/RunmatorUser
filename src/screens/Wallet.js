@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -7,47 +7,100 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Header from '../components/Header';
-import HistoryModal from '../components/HistoryModal';
+import {useIsFocused} from '@react-navigation/native';
 import Heading from '../components/Heading';
-import IconComp from '../components/IconComp';
+import * as actions from '../store/Actions/index';
 import colors from '../assets/colors';
+import {connect} from 'react-redux';
+import Button from '../components/Button';
+import {useState} from 'react';
+import BuyCreditsModal from '../components/BuyCreditsModal';
 
 const {width, height} = Dimensions.get('window');
 
-const HistoryScreen = props => {
-  let amount = '1000.00';
+const HistoryScreen = ({
+  UserReducer,
+  navigation,
+  getUserWalletBalance,
+  buyCredits,
+}) => {
+  let isFocused = useIsFocused();
+  let accessToken = UserReducer?.accessToken;
+  let userId = UserReducer?.userData?.id;
+  const [credits, setCredits] = useState('');
+  const [showCreditModal, setShowCreditModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const data = {
+    user_id: userId,
+  };
+  useEffect(() => {
+    if (isFocused === true) {
+      getUserWalletBalance(data, accessToken);
+    }
+  }, [UserReducer?.myWallet, isFocused]);
 
+  const _onPressBuyCredits = () => {
+    setIsLoading(true);
+    let formData = new FormData();
+    formData.append('user_id', 55);
+    formData.append('credit', credits);
+
+    buyCredits(formData, accessToken).then(() => {
+      setIsLoading(false);
+      setShowCreditModal(false)
+    });
+  };
   return (
     <>
       <View style={styles.container}>
-        <Header
-          showBack={true}
-          navigation={props.navigation}
-          iconName="arrow-back"
-        />
-        <View style={{flexDirection: 'row'}}>
-          <Heading
-            title="Wallet"
-            passedStyle={styles.heading}
-            fontType="bold"
+        <Header showBack={true} navigation={navigation} iconName="arrow-back" />
+        <Heading title="Wallet" passedStyle={styles.heading} fontType="bold" />
+        <View style={styles.centerView}>
+          <View>
+            <Heading
+              passedStyle={styles.totalAmountInAcc}
+              title="Total amount in your account:"
+              fontType="medium"
+            />
+            <Heading
+              passedStyle={styles.amount}
+              title={`$${
+                UserReducer?.myWallet
+                  ? UserReducer?.myWallet?.toFixed(2)
+                  : '0.00'
+              }`}
+              fontType="bold"
+            />
+          </View>
+          <Button
+            title="Buy Credits ($)"
+            onBtnPress={() => setShowCreditModal(true)}
+            isBgColor={true}
+            btnStyle={{alignSelf: 'center'}}
           />
         </View>
-        <Heading
-          passedStyle={styles.totalAmountInAcc}
-          title="Total amount in account"
-          fontType="medium"
-        />
-        <Heading
-          passedStyle={styles.amount}
-          title={`$${amount}`}
-          fontType="bold"
-        />
+        {showCreditModal && (
+          <BuyCreditsModal
+            title={'Credit Details'}
+            onPress={_onPressBuyCredits}
+            isModalVisible={showCreditModal}
+            setIsModalVisible={setShowCreditModal}
+            showLoader={isLoading}
+            credits={credits}
+            buttonText="Buy"
+            setCredits={setCredits}
+          />
+        )}
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  centerView: {
+    justifyContent: 'space-between',
+    height: height * 0.8,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -68,4 +121,8 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.08,
   },
 });
-export default HistoryScreen;
+
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
+export default connect(mapStateToProps, actions)(HistoryScreen);

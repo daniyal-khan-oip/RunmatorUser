@@ -233,6 +233,7 @@ dependencies {
        exclude group: 'com.google.android.gms', module: 'play-services-base'
        exclude group: 'com.google.android.gms', module: 'play-services-maps'
    }
+    implementation project(':react-native-community-geolocation')
    implementation 'com.google.android.gms:play-services-base:18.0.0'
    implementation 'com.google.android.gms:play-services-maps:18.0.1'
     implementation project(':react-native-splash-screen')

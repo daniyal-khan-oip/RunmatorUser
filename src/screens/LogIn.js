@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,37 +17,40 @@ import colors from '../assets/colors';
 import Heading from '../components/Heading';
 import {connect} from 'react-redux';
 import * as actions from '../store/Actions/index';
+import LottieView from 'lottie-react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const LogIn = ({navigation, UserReducer, user_login}) => {
+const LogIn = ({navigation, UserReducer, userLogin}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const _onPressLogIn = () => {
+  const _onPressLogIn = async () => {
+    const data = {
+      email: username,
+      password: password,
+      roll_id: 2,
+    };
+    setIsLoading(true);
     if (username === '' || password === '') {
       alert('Both fields required');
-    } else if (username === 'admin' || password === 'admin') {
-      user_login({
-        userData: {
-          username: username === 'admin' ? 'Michael Reiner' : username,
-        },
-        accessToken: 'TgvD65JmyrtprreASrrHBV64VB3v3B6apsh3gfNvf35jh7H',
-      }).then(() => {
-        // console.log('work');
-      });
     } else {
-      // navigation.navigate('Home');
-      alert('Invalid Credentials');
-      // console.log(username);
+      await userLogin(data, onLoginFailed);
     }
   };
+
   const _onPressSignUp = () => {
     navigation.navigate('SignUp');
   };
+
   const _onPresspassword = () => {
     navigation.navigate('ForgotPassword');
+  };
+
+  const onLoginFailed = () => {
+    setIsLoading(false);
   };
 
   return (
@@ -55,26 +58,53 @@ const LogIn = ({navigation, UserReducer, user_login}) => {
       <ImageBackground source={background_img} style={styles.image}>
         <Image source={logo} style={styles.logo} resizeMode="contain" />
 
+        {/* Input Fields  */}
         <View style={styles.inputBoxes}>
           <Inputbox
             value={username}
             setTextValue={setUsername}
-            placeholderTilte="Username"
+            passedStyle={{
+              margin: 0,
+              borderWidth: 1,
+              borderColor: colors.themeBlue,
+            }}
+            placeholderTilte="E-mail Address"
           />
           <Inputbox
             value={password}
+            passedStyle={{
+              color: 'black',
+              margin: 0,
+              borderWidth: 1,
+              borderColor: colors.themeBlue,
+            }}
             setTextValue={setPassword}
             placeholderTilte="Password"
             isSecure={true}
           />
         </View>
-        <Button
-          title="Login"
-          onBtnPress={() => _onPressLogIn()}
-          isBgColor={true}
-          btnStyle={styles.btnStyle}
-          btnTextStyle={styles.btnTextStyle}
-        />
+
+        {/* Login Button  */}
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyles}
+            autoPlay
+            colorFilters={'blue'}
+            loop
+            source={require('../assets/Lottie/loading-blue.json')}
+          />
+        ) : (
+          <Button
+            title="Login"
+            onBtnPress={() => _onPressLogIn()}
+            isBgColor={true}
+            btnStyle={styles.btnStyle}
+            btnTextStyle={styles.btnTextStyle}
+          />
+        )}
+
+        {/* Forgot Password  */}
         <View
           style={{
             flexDirection: 'row',
@@ -106,6 +136,8 @@ const LogIn = ({navigation, UserReducer, user_login}) => {
           </View>
           <View style={styles.horizontalLine} />
         </View>
+
+        {/* Signup Button  */}
         <View style={{position: 'relative'}}>
           <Button
             title="Sign Up Now"
@@ -121,6 +153,10 @@ const LogIn = ({navigation, UserReducer, user_login}) => {
 };
 
 const styles = StyleSheet.create({
+  lottieStyles: {
+    height: height * 0.12,
+    width: 100,
+  },
   orStyle: {
     fontSize: width * 0.03,
     paddingHorizontal: width * 0.02,
@@ -129,6 +165,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: colors.themeBlue,
     borderRadius: width * 0.8,
+    paddingHorizontal: height * 0.03,
     width: width * 0.8,
   },
   btnTextStyle: {

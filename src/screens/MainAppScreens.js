@@ -11,12 +11,15 @@ import Map from './Map';
 import CustomDrawer from '../CustomDrawer';
 import Help from './Help';
 import HomeScreensStack from './HomeStackScreens';
+import AlertModal from '../components/AlertModal';
+import ChangePassword from './ChangePassword';
+import CurrentBookings from './CurrentBookings';
 
 const Drawer = createDrawerNavigator();
 
 export default function MainAppScreens({navigation}) {
   const [loading, setLoading] = useState(false);
-
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
   const routes = [
     {
       id: 1,
@@ -44,16 +47,22 @@ export default function MainAppScreens({navigation}) {
     },
     {
       id: 5,
-      iconName: 'star-rate',
+      iconName: 'home-repair-service',
       iconType: 'MaterialIcons',
-      routeName: 'rate us',
+      routeName: 'current bookings',
     },
     {
       id: 6,
-      iconName: 'help-outline',
-      iconType: 'MaterialIcons',
-      routeName: 'help',
+      iconName: 'onepassword',
+      iconType: 'MaterialCommunityIcons',
+      routeName: 'change password',
     },
+    // {
+    //   id: 6,
+    //   iconName: 'help-outline',
+    //   iconType: 'MaterialIcons',
+    //   routeName: 'help',
+    // },
   ];
 
   // const requestCameraPermission = async () => {
@@ -81,36 +90,44 @@ export default function MainAppScreens({navigation}) {
   // useEffect(() => {
   //   !loading && requestCameraPermission();
   // });
+
+  // useEffect(() => {
+  //   console.log(isErrorModalVisible)
+  //   if (UserReducer?.errorModal?.status) {
+  //     setIsErrorModalVisible(true);
+  //     console.log("ttttttttttttttttttttttt")
+  //   }
+  //   if (UserReducer?.errorModal?.status === false) {
+  //     setIsErrorModalVisible(false);
+  //   }
+  // }, [UserReducer?.errorModal]);
+
   if (loading) {
     return <Text>Main Screens Loading</Text>;
   } else {
     return (
-      <Drawer.Navigator
-        initialRouteName="home"
-        screenOptions={{headerShown: false}}
-        drawerContent={props => {
-          return (
-            <CustomDrawer
-              navigation={props.navigation}
-              routes={routes}
-              drawerRoutes={props.state.routeNames}
-            />
-          );
-        }}>
-        <Drawer.Screen name="home" component={HomeScreensStack} />
-
-        <Drawer.Screen name="history" component={HistoryScreen} />
-
-        <Drawer.Screen name="wallet" component={Wallet} />
-
-        <Drawer.Screen name="rate us" component={RateUs} />
-
-        <Drawer.Screen name="profile" component={Profile} />
-
-        <Drawer.Screen name="help" component={Help} />
-
-        {/* <Drawer.Screen name="Map" component={Map} /> */}
-      </Drawer.Navigator>
+      <>
+        <Drawer.Navigator
+          initialRouteName="home"
+          screenOptions={{headerShown: false}}
+          drawerContent={props => {
+            return (
+              <CustomDrawer
+                navigation={props.navigation}
+                routes={routes}
+                drawerRoutes={props.state.routeNames}
+              />
+            );
+          }}>
+          <Drawer.Screen name="home" component={HomeScreensStack} />
+          <Drawer.Screen name="history" component={HistoryScreen} />
+          <Drawer.Screen name="current bookings" component={CurrentBookings} />
+          <Drawer.Screen name="wallet" component={Wallet} />
+          <Drawer.Screen name="rate us" component={RateUs} />
+          <Drawer.Screen name="profile" component={Profile} />
+          <Drawer.Screen name="change password" component={ChangePassword} />
+        </Drawer.Navigator>
+      </>
     );
   }
 }

@@ -7,32 +7,61 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import {imageUrl} from '../configurations/config';
 import Heading from './Heading';
+import NO_IMAGE from '../assets/tools.jpg';
 import IconComp from './IconComp';
+import LottieView from 'lottie-react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const OptionsMapper = ({item, index, onPress}) => {
+const OptionsMapper = ({item, index, onPress, isLoading}) => {
   return (
     <TouchableOpacity
       style={styles.container}
       key={index}
       activeOpacity={0.9}
       onPress={() => {
+        if (isLoading) {
+          return;
+        }
         onPress(item, index);
       }}>
       <View style={styles.boxContainer}>
-        <Image
-          source={item.image}
-          style={styles.imageStyle}
-          resizeMode="contain"
-        />
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyles}
+            autoPlay
+            colorFilters={'blue'}
+            loop
+            source={require('../assets/Lottie/loading-blue.json')}
+          />
+        ) : (
+          <Image
+            source={
+              item?.services_icon
+                ? {
+                    uri: `${imageUrl}/${item?.services_icon}/${item?.services_icon}`,
+                  }
+                : NO_IMAGE
+            }
+            style={styles.imageStyle}
+            resizeMode="contain"
+          />
+        )}
       </View>
       <View style={styles.texticonhandler}>
         <Heading
           passedStyle={styles.text}
           title={
-            item.text.length > 9 ? `${item.text.substring(0, 9)}...` : item.text
+            isLoading
+              ? 'loading'
+              : item?.services_name
+              ? item?.services_name?.length > 9
+                ? `${item?.services_name?.substring(0, 9)}...`
+                : item?.services_name
+              : 'No Name'
           }
           fontType="bold"
         />
@@ -51,6 +80,10 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: width * 0.025,
   },
+  lottieStyles: {
+    height: height * 0.2,
+    width: 120,
+  },
   text: {
     fontSize: width * 0.04,
     textTransform: 'capitalize',
@@ -58,7 +91,7 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.02,
   },
   imageStyle: {
-    width: width * 0.32,
+    width: width * 0.25,
     // height: height * 0.07,
   },
   texticonhandler: {

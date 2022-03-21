@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -23,23 +23,45 @@ import Header from '../components/Header';
 import OptionsMapper from '../components/OptionsMapper';
 import * as actions from '../store/Actions/index';
 import {connect} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-function Home({navigation, UserReducer}) {
-  console.log(UserReducer)
+function Home({navigation, UserReducer, getAllServices, ServicesReducer, }) {
+  const [services, setServices] = useState([]);
+  let isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(false);
+  const accessToken = UserReducer?.accessToken;
   const [options, setOptions] = useState(dummyOptions);
-  let name = UserReducer?.userData?.username?.split(' ')[0];
+  let name = UserReducer?.userData?.name.split(' ')[0];
+  // let name = 'Chrsitiano';
+
   // Options Handler
   const _onPressOptions = (item, index) => {
-    navigation.navigate('Map');
+    navigation.navigate('Map', {item});
   };
 
   const _onPressSignUp = () => {
     navigation.navigate('AllServices');
   };
+
+  useEffect(() => {
+    if (isFocused === true) {
+      setIsLoading(true);
+      getAllServices(accessToken).then(() => {
+        let arr = [];
+        ServicesReducer?.services?.map((ele, idx) => {
+          if (idx < 4) {
+            arr.push(ele);
+          }
+        });
+        setServices(arr);
+        setIsLoading(false);
+      });
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -51,98 +73,72 @@ function Home({navigation, UserReducer}) {
         numColumns={2}
         nestedScrollEnabled={true}
         contentContainerStyle={styles.flatListContentContainerStyle}
-        data={options}
-        keyExtractor={item => item?._id.toString()}
+        data={services?.length > 0 ? services : dummyOptions}
+        keyExtractor={item => item?.id?.toString()}
         ListHeaderComponent={() => (
-          <>
-            <Image source={wave} style={styles.img_wave} />
-
-            <View
-              style={{
-                flexDirection: name?.length > 7 ? 'column' : 'row',
-                width: width * 0.8,
-              }}>
+          <View style={styles.greetingContainer}>
+            <View style={styles.animationView}>
               <Heading
                 title="Hello,"
                 passedStyle={styles.heading}
                 fontType="bold"
               />
               <Heading
-                title={name}
-                passedStyle={styles.heading_username}
-                fontType="bold-italic"
+                title={
+                  name?.length > 12 ? `${name?.substring(0, 12)}...` : name
+                }
+                passedStyle={[
+                  styles.heading_username,
+                  name?.length > 7 && {fontSize: width * 0.08},
+                ]}
+                fontType="bold"
               />
             </View>
-          </>
+            <Image source={wave} style={styles.img_wave} />
+          </View>
         )}
-        ListHeaderComponentStyle={{
-          // backgroundColor: 'red',
-          marginTop: height * -0.05,
-        }}
         renderItem={({item, index}) => (
-          <OptionsMapper item={item} index={index} onPress={_onPressOptions} />
+          <OptionsMapper
+            item={item}
+            index={index}
+            onPress={_onPressOptions}
+            isLoading={isLoading}
+          />
         )}
       />
-      {/* 
-        Ahmed Code Here:::--
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          <TouchableOpacity
-            style={styles.boxContainer}
-            onPress={() => {
-              console.log('pressed');
-            }}>
-            <Image source={construction} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.boxContainer}
-            onPress={() => {
-              console.log('pressed');
-            }}>
-            <Image source={battery} />
-          </TouchableOpacity>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.text}>Towing</Text>
-            <Text style={styles.text}>Battery</Text>
-          </View>
-        </View>
-
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          <TouchableOpacity
-            style={styles.boxContainer}
-            onPress={() => {
-              console.log('pressed');
-            }}>
-            <Image source={car} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.boxContainer}
-            onPress={() => {
-              console.log('pressed');
-            }}>
-            <Image source={wheel} />
-          </TouchableOpacity>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.text}>Accident</Text>
-            <Text style={styles.text}>Wheel</Text>
-          </View>
-        </View> */}
 
       {/* All Services  */}
-      <View style={styles.allServicesStyle}>
-        <Button
-          title="View All Services"
-          onBtnPress={() => _onPressSignUp()}
-          isBgColor={true}
-          btnStyle={styles.btnStyle}
-          btnTextStyle={styles.btnTextStyle}
-        />
-      </View>
-      {/* </ScrollView> */}
+      {!isLoading && (
+        <View style={styles.allServicesStyle}>
+          <Button
+            title="View All Services"
+            onBtnPress={() => _onPressSignUp()}
+            isBgColor={true}
+            btnStyle={styles.btnStyle}
+            btnTextStyle={styles.btnTextStyle}
+          />
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  animationView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    // marginLeft: width * 0.05,
+  },
+  greetingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor:'red',
+    width: width * 0.8,
+    justifyContent: 'space-between',
+    textTransform: 'capitalize',
+    marginTop: height * 0.02,
+    marginHorizontal: width * 0.05,
+  },
   btnStyle: {
     backgroundColor: colors.themeBlue,
     borderRadius: width * 0.08,
@@ -165,7 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   img_wave: {
-    marginTop: height * 0.08,
+    // marginTop: height * 0.08,
+    width: width * 0.15,
+    height: height * 0.08,
   },
   heading: {
     color: 'black',
@@ -206,30 +204,30 @@ const styles = StyleSheet.create({
     marginTop: height * 0.01,
   },
 });
-const mapStateToProps = ({UserReducer}) => {
-  return {UserReducer};
+const mapStateToProps = ({UserReducer, ServicesReducer}) => {
+  return {UserReducer, ServicesReducer};
 };
 export default connect(mapStateToProps, actions)(Home);
 
 const dummyOptions = [
   {
-    _id: 1,
-    text: 'towing',
-    image: require('../assets/Images/services/towing.png'),
+    id: 1,
+    services_name: 'Loading',
+    services_icon: '',
   },
   {
-    _id: 2,
-    text: 'battery',
-    image: require('../assets/Images/services/battery.png'),
+    id: 2,
+    services_name: 'Loading',
+    services_icon: '',
   },
   {
-    _id: 3,
-    text: 'accident',
-    image: require('../assets/Images/services/accident.png'),
+    id: 3,
+    services_name: 'Loading',
+    services_icon: '',
   },
   {
-    _id: 4,
-    text: 'flat tyre',
-    image: require('../assets/Images/services/flattyre.png'),
+    id: 4,
+    services_name: 'Loading',
+    services_icon: '',
   },
 ];
