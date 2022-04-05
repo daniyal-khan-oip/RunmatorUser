@@ -40,11 +40,11 @@ const OptionsMapper = ({item, index, onPress, isLoading}) => {
         ) : (
           <Image
             source={
-              item?.services_icon
+              item?.services_icon != null
                 ? {
                     uri: `${imageUrl}/${item?.services_icon}/${item?.services_icon}`,
                   }
-                : NO_IMAGE
+                : require('../assets/tools.jpg')
             }
             style={styles.imageStyle}
             resizeMode="contain"

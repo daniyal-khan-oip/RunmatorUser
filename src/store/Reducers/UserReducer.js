@@ -73,6 +73,7 @@ export function UserReducer(state = INITIAL_STATE, action) {
       };
 
     case WALLET_BALANCE:
+      console.log(action.payload,'action.payload')
       return {
         ...state,
         myWallet: action.payload,

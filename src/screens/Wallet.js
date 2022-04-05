@@ -39,17 +39,25 @@ const HistoryScreen = ({
     }
   }, [UserReducer?.myWallet, isFocused]);
 
+  console.log(UserReducer?.myWallet,"UserReducer?.myWallet")
   const _onPressBuyCredits = () => {
     setIsLoading(true);
-    let formData = new FormData();
-    formData.append('user_id', 55);
-    formData.append('credit', credits);
-
-    buyCredits(formData, accessToken).then(() => {
+    // let formData = new FormData();
+    // formData.append('user_id', UserReducer?.userData?.id);
+    // formData.append('credit', credits);
+    // formData.append('token', UserReducer?.userData?.token);
+    const data = {
+      credit: credits,
+      user_id: UserReducer?.userData?.id,
+      // token: UserReducer?.userData?.token,
+    };
+    buyCredits(data, accessToken).then(() => {
       setIsLoading(false);
-      setShowCreditModal(false)
+      setShowCreditModal(false);
     });
   };
+
+
   return (
     <>
       <View style={styles.container}>
@@ -65,8 +73,8 @@ const HistoryScreen = ({
             <Heading
               passedStyle={styles.amount}
               title={`$${
-                UserReducer?.myWallet
-                  ? UserReducer?.myWallet?.toFixed(2)
+                UserReducer?.myWallet !== ''
+                  ? `${UserReducer?.myWallet}.00`
                   : '0.00'
               }`}
               fontType="bold"
@@ -76,7 +84,7 @@ const HistoryScreen = ({
             title="Buy Credits ($)"
             onBtnPress={() => setShowCreditModal(true)}
             isBgColor={true}
-            btnStyle={{alignSelf: 'center'}}
+            btnStyle={{alignSelf: 'center', marginBottom: 40}}
           />
         </View>
         {showCreditModal && (

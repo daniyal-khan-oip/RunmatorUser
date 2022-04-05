@@ -1,5 +1,5 @@
-export const baseUrl = `https://ed12-110-93-244-255.ngrok.io`;
-// export const baseUrl = `https://webprojectmockup.com/custom/runmatter_apis/public`;
+// export const baseUrl = `https://ed12-110-93-244-255.ngrok.io`;
+export const baseUrl = `https://webprojectmockup.com/custom/runmatter_apis/public`;
 
 export const apiUrl = `${baseUrl}/api`;
 export const imageUrl = `https://webprojectmockup.com/custom/runmatter_apis/images`;

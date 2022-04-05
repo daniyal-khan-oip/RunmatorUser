@@ -35,6 +35,7 @@ const Map = ({
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = UserReducer?.accessToken;
+  // console.log(UserReducer?.userData)
   const [location, setLocation] = useState('Karachi');
   const [coordinates, setCoordinates] = useState(UserReducer?.coords);
   const [phoneNumber, setPhoneNumber] = useState('030322221112');
@@ -121,7 +122,7 @@ const Map = ({
             fetchDetails={true}
             enablePoweredByContainer={false}
             onPress={(data, details = null) => {
-              console.log(details?.geometry?.location);
+              // console.log(details?.geometry?.location);
               setCoordinates(details?.geometry?.location);
               setLocation(data?.description);
             }}

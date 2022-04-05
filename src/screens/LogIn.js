@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  PermissionsAndroid,
+  BackHandler,
   ImageBackground,
   ScrollView,
 } from 'react-native';
@@ -22,10 +24,11 @@ import LottieView from 'lottie-react-native';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const LogIn = ({navigation, UserReducer, userLogin}) => {
+const LogIn = ({navigation, UserReducer, userLogin, getCurrentLocation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [granted, setGranted] = useState(false);
 
   const _onPressLogIn = async () => {
     const data = {
@@ -53,6 +56,32 @@ const LogIn = ({navigation, UserReducer, userLogin}) => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    if (granted) {
+      getCurrentLocation();
+    }
+  }, [granted]);
+
+  useEffect(() => {
+    async function requestLocationPermission() {
+      try {
+        const platformCheck = Platform.OS;
+        if (platformCheck != 'ios') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            setGranted(granted);
+          } else {
+            BackHandler.exitApp();
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+    requestLocationPermission();
+  }, []);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>

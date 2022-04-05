@@ -17,11 +17,12 @@ import Heading from '../components/Heading';
 import colors from '../assets/colors';
 import PhoneInput from 'react-native-phone-number-input';
 import {useRef} from 'react';
+import {connect} from 'react-redux';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const SignUp = ({navigation}) => {
+const SignUp = ({navigation, UserReducer}) => {
   const phoneInput = useRef(null);
   const [username, setUsername] = useState('test');
   const [email, setEmail] = useState('');
@@ -44,19 +45,29 @@ const SignUp = ({navigation}) => {
     } else if (password != c_password) {
       alert('Password does not match ');
     } else {
+      // console.log({
+      //   email: email,
+      //   password: password,
+      //   name: username,
+      //   role_id: 2,
+      //   phone: phone_no,
+      //   lat: UserReducer?.coords?.lat,
+      //   lng: UserReducer?.coords?.lng,
+      // });
       navigation.navigate('BankCardDetails', {
         email: email,
         password: password,
         name: username,
         role_id: 2,
         phone: phone_no,
+        lat:UserReducer?.coords?.lat,
+        lng:UserReducer?.coords?.lng,
       });
     }
   };
   const _onPresslogin = () => {
     navigation.navigate('LogIn');
   };
-
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <ImageBackground source={background_img} style={styles.image}>
@@ -185,7 +196,7 @@ const styles = StyleSheet.create({
   inputBoxStyles: {
     margin: 0,
     borderWidth: 1,
-    borderRadius:50,
+    borderRadius: 50,
     borderColor: colors.themeBlue,
   },
   alreadyLabel: {
@@ -245,4 +256,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+const mapStateToProps = ({UserReducer}) => {
+  return {UserReducer};
+};
+export default connect(mapStateToProps, null)(SignUp);

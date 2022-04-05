@@ -5,14 +5,15 @@ import Geolocation from '@react-native-community/geolocation';
 
 // Auth Action
 export const userSignup = (data, _onSignUpFailed) => async dispatch => {
+  console.log('data: ', data);
   try {
     const response = await axios.post(`${apiUrl}/register`, data);
-
     if (response?.data?.status) {
       dispatch({
         type: types.USER_SIGNUP,
         payload: response?.data?.data,
       });
+      console.log('Signuppp Success!!!');
     } else {
       dispatch({
         type: types.ERROR_MODAL,
@@ -50,9 +51,16 @@ export const userSignup = (data, _onSignUpFailed) => async dispatch => {
 
 export const userLogin = (data, _onLoginFailed) => async dispatch => {
   try {
-    const URL = `https://ed12-110-93-244-255.ngrok.io/api/login`;
-    const response = await axios.post(URL, data);
-    console.log(response?.data);
+    console.log('data: ', data);
+    const URL = `${apiUrl}/login`;
+    console.log('URL', URL);
+    const response = await axios.post(URL, data, {
+      headers: {
+        Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
+        Accept: 'application/json',
+      },
+    });
+    console.log('-----------', response?.data);
     if (response.data.status) {
       if (response?.data?.data?.role_id == 2) {
         dispatch({
@@ -75,17 +83,17 @@ export const userLogin = (data, _onLoginFailed) => async dispatch => {
       }
     }
 
-    if (response.data?.data.length === 0) {
-      _onLoginFailed();
-      dispatch({
-        type: types.ERROR_MODAL,
-        payload: {
-          msg: response.data.msg,
-          title: 'Login Failed',
-          status: true,
-        },
-      });
-    }
+    // if (response.data?.data === undefined) {
+    //   _onLoginFailed();
+    //   dispatch({
+    //     type: types.ERROR_MODAL,
+    //     payload: {
+    //       msg: response.data.msg,
+    //       title: 'Login Failed',
+    //       status: true,
+    //     },
+    //   });
+    // }
   } catch (error) {
     _onLoginFailed();
     dispatch({
@@ -161,6 +169,7 @@ export const getAllServices = token => async dispatch => {
     });
 
     if (res?.data?.status) {
+      console.log(JSON.stringify(res.data.data, null, 2), ' services data');
       dispatch({
         type: types.GET_SERVICES,
         payload: res.data.data.filter(ele => ele.services_status === 1),
@@ -173,18 +182,20 @@ export const getAllServices = token => async dispatch => {
 
 export const getUserWalletBalance = (data, token) => async dispatch => {
   try {
-    const res = await axios.post(`${apiUrl}/admin/show_balance`, data, {
+    const URL = `https://webprojectmockup.com/custom/runmatter_apis/public/api/admin/show_balance`;
+    const res = await axios.post(URL, data, {
       headers: {
         Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
-        // Authorization: 'Bearer ' + token,
         Accept: 'application/json',
       },
     });
-
-    dispatch({
-      type: types.WALLET_BALANCE,
-      payload: res.data.data,
-    });
+    console.log('1!!!!!1!!!   ', res.data.data);
+    if (res.data.status) {
+      dispatch({
+        type: types.WALLET_BALANCE,
+        payload: res.data.data,
+      });
+    }
   } catch (error) {
     console.log('Wallet Balance Fetching Failed: ' + error.response);
   }
@@ -193,19 +204,12 @@ export const getUserWalletBalance = (data, token) => async dispatch => {
 export const buyCredits = (data, token) => async dispatch => {
   console.log(data);
   try {
-    const response = await axios.post(
-      `${apiUrl}/admin/wallet`,
-      {
-        user_id: data?.user_id,
-        credit: data?.credit,
+    const response = await axios.post(`${apiUrl}/admin/wallet`, data, {
+      headers: {
+        Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
+        Accept: 'application/json',
       },
-      {
-        headers: {
-          Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
-          Accept: 'application/json',
-        },
-      },
-    );
+    });
 
     console.log(response.data);
     if (response?.data?.status) {
@@ -223,6 +227,7 @@ export const getCurrentLocation = () => async dispatch => {
   try {
     Geolocation.getCurrentPosition(
       position => {
+        console.log('=====', position);
         dispatch({
           type: types.GET_CURRENT_LOC,
           payload: {
@@ -247,7 +252,7 @@ export const getCurrentLocation = () => async dispatch => {
 
 export const requestForService =
   (data, token, _onFailed, _onPressModalSuccessButton) => async dispatch => {
-    console.log(data);
+    console.log('DATAAAAAAAAA ', JSON.stringify(data, null, 2));
     const test = {
       lat: 37.4220047,
       long: -122.0839995,
@@ -257,8 +262,8 @@ export const requestForService =
     };
     try {
       const response = await axios.post(
-        `https://5e33-103-244-176-173.ngrok.io/api/admin/request_for_service`,
-        JSON.stringify(test),
+        `${apiUrl}/api/admin/request_for_service`,
+        data,
         {
           headers: {
             Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
@@ -398,19 +403,20 @@ export const changePasswordRequest =
           Accept: 'application/json',
         },
       };
+      console.log(data, './././');
       const response = await axios.post(URL, data, authHeader);
-      if (response?.data.success) {
+      if (response?.data.status) {
         dispatch({
           type: types.ERROR_MODAL,
           payload: {
             title: 'Password Changed Success!',
-            msg: response?.data?.message,
+            msg: response?.data?.msg,
             status: true,
           },
         });
         _onSuccessChanged();
       }
-      if (!response?.data.success) {
+      if (!response?.data.status) {
         dispatch({
           type: types.ERROR_MODAL,
           payload: {
@@ -438,7 +444,7 @@ export const getCurrentBookings = data => async dispatch => {
   try {
     const response = await axios.post(
       `${apiUrl}/admin/current_bookings`,
-     data,
+      data,
       {
         headers: {
           Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',

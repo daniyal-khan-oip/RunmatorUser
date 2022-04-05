@@ -40,6 +40,7 @@ const BankCardDetails = ({navigation, route, userSignup, setErrorModal}) => {
     if (stripeGeneratedKey === '') {
       alert('Card number is required');
     } else {
+      // console.log(data)
       await userSignup(data, _onSignUpFailed);
     }
   };
