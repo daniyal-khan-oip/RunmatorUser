@@ -25,7 +25,12 @@ const CustomButton = ({onPress, label, style, currentScreenName}) => {
   return (
     <TouchableOpacity
       key={label.id}
-      onPress={onPress}
+      onPress={() => {
+        // if (label.iconName == 'logout') {
+        //   return;
+        // }
+        onPress();
+      }}
       style={[
         styles.btnContainer,
         // label?.routeName == currentScreenName && {

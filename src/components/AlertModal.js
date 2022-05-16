@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
   btnTextStyle: {
     color: 'white',
     fontSize: width * 0.045,
-    fontFamily: 'Poppins-SemiBold',
+    // fontFamily: 'Poppins-SemiBold',
   },
   cancelBtnTextStyle: {
     color: colors.themeBlue,
-    fontFamily: 'Poppins-SemiBold',
+    // fontFamily: 'Poppins-SemiBold',
     fontSize: width * 0.04,
   },
   flexRow: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: width * 0.04,
     paddingVertical: height * 0.025,
     textAlignVertical: 'top',
-    fontFamily: 'Poppins-Regular',
+    // fontFamily: 'Poppins-Regular',
   },
   requestingView: {
     backgroundColor: 'white',
@@ -181,6 +181,6 @@ const styles = StyleSheet.create({
     color: colors.themeBlue,
     fontSize: width * 0.05,
     marginLeft: width * 0.08,
-    fontFamily: 'Poppins-SemiBold',
+    // fontFamily: 'Poppins-SemiBold',
   },
 });

@@ -6,8 +6,10 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  SafeAreaView,
   ScrollView,
   Alert,
+  Platform,
 } from 'react-native';
 import Header from '../components/Header';
 import LottieView from 'lottie-react-native';
@@ -97,7 +99,9 @@ const Profile = ({UserReducer, navigation, updateProfile}) => {
         console.log('User tapped custom button: ', response.customButton);
         // SelectMultipleImage()
       } else {
+        // console.log(response.assets[0],"==------....")
         setUserImage(response.assets[0]);
+
         // const source = {
         // for showing image
         //   uri: 'data:image/jpeg;base64,' + response.data
@@ -107,16 +111,31 @@ const Profile = ({UserReducer, navigation, updateProfile}) => {
       }
     });
   };
-
+  // console.log(userImage)
   const _onPressUpdateProfile = () => {
+    if(displayName?.length == 0) {
+      alert("Please Enter Display Name");
+      return;
+    }
     setIsLoading(true);
     const apiDataForImage = {
       id: UserReducer?.userData?.id,
-      image: userImage,
+      image:
+        userImage !== null && userImage !== undefined && userImage !== ''
+          ? 'data:image/jpeg;base64,' + userImage.base64
+          : UserReducer?.userData?.profile_image,
       name: displayName,
     };
-
-    updateProfile(apiDataForImage, accessToken, _onFailed).then(() => {
+    let isUpdatingImage =
+      userImage !== null && userImage !== undefined && userImage !== ''
+        ? false
+        : true;
+    updateProfile(
+      apiDataForImage,
+      accessToken,
+      _onFailed,
+      isUpdatingImage,
+    ).then(() => {
       setIsLoading(false);
       setUserImage(null);
     });
@@ -133,112 +152,115 @@ const Profile = ({UserReducer, navigation, updateProfile}) => {
   };
   return (
     <View style={styles.container}>
-      {/* Header  */}
-      <Header
-        showBack={true}
-        navigation={navigation}
-        iconName="arrow-back"
-        iconSize={25}
-      />
+      <SafeAreaView style={{flex: 1}}>
+        {/* Header  */}
+        <Header
+          showBack={true}
+          navigation={navigation}
+          iconName="arrow-back"
+          iconSize={25}
+        />
 
-      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-      <View style={{justifyContent: 'space-between', flex: 1}}>
-        <View>
-          {/* Page Heading */}
-          <Heading
-            title="Profile Settings"
-            passedStyle={styles.heading}
-            fontType="bold"
-          />
+        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+        <View style={{justifyContent: 'space-between', flex: 1}}>
+          <View>
+            {/* Page Heading */}
+            <Heading
+              title="Profile Settings"
+              passedStyle={styles.heading}
+              fontType="bold"
+            />
 
-          {/* Image Container  */}
-          <View style={styles.boxContainer}>
-            {UserReducer?.userData?.profile_image || userImage ? (
-              <Image
-                source={{
-                  uri: userImage
-                    ? `data:${userImage.type};base64,${userImage.base64}`
-                    : `${imageUrl}${UserReducer?.userData?.profile_image.substring(
-                        0,
-                        5,
-                      )}`,
-                }}
-                style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
-              />
-            ) : (
+            {/* Image Container  */}
+            <View style={styles.boxContainer}>
+              {UserReducer?.userData?.profile_image || userImage ? (
+                <Image
+                  source={{
+                    uri: userImage
+                      ? `data:${userImage?.type};base64,${userImage?.base64}`
+                      : UserReducer?.userData?.profile_image,
+                  }}
+                  // `${imageUrl}${UserReducer?.userData?.profile_image.substring(
+                  //   0,
+                  //   5,
+                  // )}`,
+                  style={[StyleSheet.absoluteFill, {borderRadius: 100}]}
+                />
+              ) : (
+                <Heading
+                  passedStyle={styles.usernameWordsStyle}
+                  title={acronym}
+                  fontType="bold"
+                />
+              )}
+              <TouchableOpacity
+                style={styles.iconTouchable}
+                onPress={() => uploadPhoto()}>
+                <IconComp
+                  iconName="camera-alt"
+                  type={'MaterialIcons'}
+                  passedStyle={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Username Container  & Password */}
+            <View style={styles.usernameViewStyle}>
               <Heading
-                passedStyle={styles.usernameWordsStyle}
-                title={acronym}
-                fontType="bold"
+                title={displayName}
+                passedStyle={styles.usernameStyle}
+                fontType="medium"
+              />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => _onPressEditName()}>
+                <IconComp
+                  iconName="pencil"
+                  type="MaterialCommunityIcons"
+                  passedStyle={styles.pencilIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Save Button  */}
+          <View style={styles.btnContainer}>
+            {isLoading ? (
+              <View style={styles.loadingComponent}>
+                <Heading
+                  title="Saving..."
+                  passedStyle={styles.savingText}
+                  fontType="semi-bold"
+                />
+                <LottieView
+                  speed={1}
+                  style={styles.lottieStyles}
+                  autoPlay
+                  loop
+                  source={require('../assets/Lottie/loading-yellow.json')}
+                />
+              </View>
+            ) : (
+              <Button
+                title="SAVE"
+                btnStyle={styles.btnStyle}
+                onBtnPress={() => _onPressUpdateProfile()}
+                btnTextStyle={styles.btnTextColor}
+                isBgColor={true}
               />
             )}
-            <TouchableOpacity
-              style={styles.iconTouchable}
-              onPress={() => uploadPhoto()}>
-              <IconComp
-                iconName="camera-alt"
-                type={'MaterialIcons'}
-                passedStyle={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Username Container  & Password */}
-          <View style={styles.usernameViewStyle}>
-            <Heading
-              title={displayName}
-              passedStyle={styles.usernameStyle}
-              fontType="medium"
-            />
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => _onPressEditName()}>
-              <IconComp
-                iconName="pencil"
-                type="MaterialCommunityIcons"
-                passedStyle={styles.pencilIcon}
-              />
-            </TouchableOpacity>
           </View>
         </View>
-
-        {/* Save Button  */}
-        <View style={styles.btnContainer}>
-          {isLoading ? (
-            <View style={styles.loadingComponent}>
-              <Heading
-                title="Saving..."
-                passedStyle={styles.savingText}
-                fontType="semi-bold"
-              />
-              <LottieView
-                speed={1}
-                style={styles.lottieStyles}
-                autoPlay
-                loop
-                source={require('../assets/Lottie/loading-yellow.json')}
-              />
-            </View>
-          ) : (
-            <Button
-              title="SAVE"
-              btnStyle={styles.btnStyle}
-              onBtnPress={() => _onPressUpdateProfile()}
-              btnTextStyle={styles.btnTextColor}
-              isBgColor={true}
-            />
-          )}
-        </View>
-      </View>
-      {/* </ScrollView> */}
-      {isModalVisible && (
-        <DisplayNameChangeModal
-          value={displayName}
-          setValue={setDisplayName}
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-        />
-      )}
+        {/* </ScrollView> */}
+        {isModalVisible && (
+          <DisplayNameChangeModal
+            value={displayName}
+            setValue={setDisplayName}
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+          />
+        )}
+      </SafeAreaView>
     </View>
   );
 };
@@ -256,6 +278,7 @@ const styles = StyleSheet.create({
   usernameWordsStyle: {
     fontSize: width * 0.12,
     color: colors.themeBlue,
+    textTransform: 'uppercase',
   },
   btnStyle: {
     borderRadius: width * 0.02,
@@ -304,7 +327,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 9,
+    // borderWidth: 1,
+    // borderColor: 'grey',
     backgroundColor: 'rgba(0,0,0,0.008)',
     // paddingHorizontal: width * 0.2,
     // paddingVertical: height * 0.005,
@@ -312,21 +337,30 @@ const styles = StyleSheet.create({
   usernameStyle: {
     fontSize: height * 0.031,
     marginRight: width * 0.01,
-    borderBottomColor: 'black',
+  },
+  usernameViewStyle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
+    borderBottomColor: 'grey',
+    marginHorizontal: width * 0.1,
+    marginVertical: height * 0.03,
   },
   icon: {
-    backgroundColor: colors.themeBlue,
     color: '#ffffff',
-    padding: height * 0.01,
-    borderRadius: width,
+    // borderRadius: 50,
+    padding: height * 0.014,
   },
   iconTouchable: {
     position: 'absolute',
     top: height * 0.18,
+    width: width * 0.11,
+    alignSelf: 'center',
+    height: height * 0.05,
     right: width * 0.02,
-    backgroundColor: 'blue',
-    borderRadius: width,
+    backgroundColor: colors.themeBlue,
+    borderRadius: 50,
   },
   border_line: {
     borderBottomWidth: 1,
@@ -341,12 +375,7 @@ const styles = StyleSheet.create({
     height: height * 0.28,
     borderRadius: width * 0.8,
   },
-  usernameViewStyle: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: height * 0.03,
-  },
+
   loadingComponent: {
     borderRadius: width * 0.02,
     position: 'relative',
@@ -355,7 +384,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeBlue,
     justifyContent: 'center',
     alignItems: 'center',
-    height: height * 0.08,
+    height: Platform.OS != 'ios' ? height * 0.08 : height * 0.065,
     width: width * 0.8,
     marginVertical: height * 0.02,
   },

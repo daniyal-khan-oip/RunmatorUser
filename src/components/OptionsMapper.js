@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const OptionsMapper = ({item, index, onPress, isLoading}) => {
+  console.log(`${imageUrl}/${item?.services_icon}/${item?.services_icon}`)
   return (
     <TouchableOpacity
       style={styles.container}
@@ -40,11 +41,12 @@ const OptionsMapper = ({item, index, onPress, isLoading}) => {
         ) : (
           <Image
             source={
-              item?.services_icon != null
+              item?.services_icon != null && item?.services_icon != undefined && item?.services_icon !== ''
                 ? {
                     uri: `${imageUrl}/${item?.services_icon}/${item?.services_icon}`,
                   }
-                : require('../assets/tools.jpg')
+                : 
+                require('../assets/tools.jpg')
             }
             style={styles.imageStyle}
             resizeMode="contain"
@@ -58,8 +60,8 @@ const OptionsMapper = ({item, index, onPress, isLoading}) => {
             isLoading
               ? 'loading'
               : item?.services_name
-              ? item?.services_name?.length > 9
-                ? `${item?.services_name?.substring(0, 9)}...`
+              ? item?.services_name?.length > 12
+                ? `${item?.services_name?.substring(0, 12)}...`
                 : item?.services_name
               : 'No Name'
           }
@@ -91,8 +93,8 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.02,
   },
   imageStyle: {
-    width: width * 0.25,
-    // height: height * 0.07,
+    width: width * 0.35,
+    height: height * 0.2,
   },
   texticonhandler: {
     flexDirection: 'row',

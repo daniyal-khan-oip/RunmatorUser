@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
+  Dimensions,SafeAreaView,
   ImageBackground,
   ScrollView,
 } from 'react-native';
@@ -50,6 +50,8 @@ const BankCardDetails = ({navigation, route, userSignup, setErrorModal}) => {
   };
   return (
     <ImageBackground source={background_img} style={styles.image}>
+      <SafeAreaView>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <Button
           title="Back"
@@ -91,6 +93,8 @@ const BankCardDetails = ({navigation, route, userSignup, setErrorModal}) => {
           )}
         </View>
       </ScrollView>
+      </SafeAreaView>
+
     </ImageBackground>
   );
 };

@@ -3,9 +3,13 @@ import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
   Dimensions,
+  ImageBackground,
   View,
   TouchableOpacity,
+  Platform,
+  SafeAreaView,
   Linking,
+  StatusBar,
 } from 'react-native';
 import colors from '../assets/colors';
 import Button from '../components/Button';
@@ -39,6 +43,7 @@ const Map = ({
   const [location, setLocation] = useState('Karachi');
   const [coordinates, setCoordinates] = useState(UserReducer?.coords);
   const [phoneNumber, setPhoneNumber] = useState('030322221112');
+  const [test, setTest] = useState('');
   const SERVICE = route?.params?.item;
 
   // Option Press Handler
@@ -73,6 +78,7 @@ const Map = ({
       _onPressModalSuccessButton,
       isLoading,
     );
+    setIsLoading(false);
   };
 
   const _onFailed = () => {
@@ -82,136 +88,187 @@ const Map = ({
   const _onPressModalSuccessButton = () => {
     navigation.navigate('Home');
   };
-  
+
   return (
     <View style={styles.container}>
-      <Header showBack={true} navigation={navigation} iconName="arrow-back" />
-      <MapView
-        style={{width: '100%', height: '100%', position: 'absolute', top: 60}}
-        provider={PROVIDER_GOOGLE}
-        region={{
-          latitude: coordinates?.lat || UserReducer?.coords?.lat,
-          longitude: coordinates?.lng || UserReducer?.coords?.lng,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
-        }}>
-        <Marker
-          coordinate={{
-            latitude: coordinates?.lat || UserReducer?.coords?.lat,
-            longitude: coordinates?.lng || UserReducer?.coords?.lng,
-          }}
-        />
-      </MapView>
-      <View style={styles.contentContainer}>
-        <View
-          style={{
-            height: height * 0.4,
-            // shadowColor: '#000',
-            // shadowOffset: {
-            //   width: 0,
-            //   height: 2,
-            // },
-            // shadowOpacity: 0.25,
-            // shadowRadius: 3.84,
-            // backgroundColor: 'white',
-            // elevation: 5,
-          }}>
-          {/* Rider Search Component  */}
-          <GooglePlacesAutocomplete
-            placeholder="Enter Your Location"
-            fetchDetails={true}
-            enablePoweredByContainer={false}
-            onPress={(data, details = null) => {
-              // console.log(details?.geometry?.location);
-              setCoordinates(details?.geometry?.location);
-              setLocation(data?.description);
-            }}
-            query={{
-              key: 'AIzaSyAE-uaXvfrMbCdPVqIF3xL_4pfzocEdM48',
-              language: 'en',
-            }}
-            onFail={err => console.log('error is here:::', err)}
-            renderLeftButton={() => (
-              <IconComp
-                iconName="location-pin"
-                type="Entypo"
-                passedStyle={styles.locationIcon}
-              />
-            )}
-            styles={{
-              textInputContainer: {
-                width: width * 0.9,
-                backgroundColor: 'white',
-                borderRadius: width * 0.025,
-                height: height * 0.084,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-              },
-              textInput: {
-                borderRadius: width * 0.025,
-                height: height * 0.084,
-                color: '#5d5d5d',
-                fontSize: width * 0.04,
-              },
-            }}
-          />
-        </View>
-
-        {/* Current Location & Confirm Button Container  */}
-        <View>
-          {/* Current Location  */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => setCoordinates(UserReducer?.coords)}
-            style={styles.boxContainer2}>
-            <IconComp
-              iconName="my-location"
-              type={'MaterialIcons'}
-              passedStyle={styles.myLocIconStyle}
+      <SafeAreaView>
+        {/* {coordinates !== null && coordinates != undefined ? (
+          <ImageBackground
+            style={styles.loadMapStyle}
+            source={require('../assets/Map.png')}>
+            <LottieView
+              speed={1}
+              style={styles.lottieLoad}
+              autoPlay
+              colorFilters={'blue'}
+              loop
+              source={require('../assets/Lottie/loading-blue.json')}
             />
-          </TouchableOpacity>
+          </ImageBackground>
+        ) :  */}
 
-          {/* Confirm Button  */}
-          {isLoading ? (
-            <View style={styles.lottieContainer}>
-              <LottieView
-                speed={1}
-                style={styles.lottieStyles}
-                autoPlay
-                colorFilters={'blue'}
-                loop
-                source={require('../assets/Lottie/loading-yellow.json')}
-              />
-              <Heading
-                title={'Requesting...'}
-                passedStyle={styles.requestLabel}
+        <>
+          <Header
+            showBack={true}
+            navigation={navigation}
+            iconName="arrow-back"
+          />
+          <MapView
+            style={{
+              width: width,
+              height: height,
+              position: 'absolute',
+              top: height * 0.08,
+            }}
+            provider={PROVIDER_GOOGLE}
+            region={{
+              latitude: coordinates?.lat || UserReducer?.coords?.lat,
+              longitude: coordinates?.lng || UserReducer?.coords?.lng,
+              // latitude: 48.8566,
+              // longitude: 2.3522,
+              latitudeDelta: 0.001,
+              longitudeDelta: 0.001,
+            }}>
+            <Marker
+              coordinate={{
+                latitude: coordinates?.lat || UserReducer?.coords?.lat,
+                longitude: coordinates?.lng || UserReducer?.coords?.lng,
+                // latitude: 48.8566,
+                // longitude: 2.3522,
+              }}/>
+              {/* <MapView.Circle
+                key={(
+                  coordinates?.lat + coordinates?.lng 
+                  // ||
+                  // UserReducer?.coords?.lat + UserReducer?.coords?.lng
+                ).toString()}
+                center={{
+                  latitude: coordinates?.lat || UserReducer?.coords?.lat,
+                  longitude: coordinates?.lng || UserReducer?.coords?.lng,
+                  // latitude: 48.8566,
+                  // longitude: 2.3522,
+                  latitudeDelta: 0.001,
+                  longitudeDelta: 0.001,
+                }}
+                radius={300}
+                strokeWidth={0}
+                strokeColor={'#1a66ff'}
+                fillColor={'rgba(176,17,37,0.2)'}
+              /> */}
+            {/* </Marker> */}
+          </MapView>
+          <View style={styles.contentContainer}>
+            <View
+              style={{
+                height: height * 0.4,
+                // shadowColor: '#000',
+                // shadowOffset: {
+                //   width: 0,
+                //   height: 2,
+                // },
+                // shadowOpacity: 0.25,
+                // shadowRadius: 3.84,
+                // backgroundColor: 'white',
+                // elevation: 5,
+              }}>
+              {/* Rider Search Component  */}
+              <GooglePlacesAutocomplete
+                placeholder="Enter Your Location"
+                fetchDetails={true}
+                enablePoweredByContainer={false}
+                onPress={(data, details = null) => {
+                  // console.log(details?.geometry?.location);
+                  setCoordinates(details?.geometry?.location);
+                  setLocation(data?.description);
+                }}
+                query={{
+                  key: 'AIzaSyAE-uaXvfrMbCdPVqIF3xL_4pfzocEdM48',
+                  language: 'en',
+                }}
+                onFail={err => console.log('error is here:::', err)}
+                renderLeftButton={() => (
+                  <IconComp
+                    iconName="location-pin"
+                    type="Entypo"
+                    passedStyle={styles.locationIcon}
+                  />
+                )}
+                styles={{
+                  textInputContainer: {
+                    width: width * 0.9,
+                    backgroundColor: 'white',
+                    borderRadius: width * 0.025,
+                    height: height * 0.084,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+
+                    elevation: 5,
+                  },
+                  textInput: {
+                    borderRadius: width * 0.025,
+                    height: height * 0.084,
+                    color: '#5d5d5d',
+                    fontSize: width * 0.04,
+                  },
+                }}
               />
             </View>
-          ) : (
-            <Button
-              title="CONFIRM"
-              onBtnPress={() => confirmBooking()}
-              isBgColor={true}
-              btnStyle={styles.btnStyle}
-              btnTextStyle={styles.btnTextStyle}
-            />
-          )}
-        </View>
-      </View>
 
-      {/* Bottom Sheet Component  */}
-      <BottomSheet
-        sheetRef={sheetRef}
-        onPress={_onPressStartTracking}
-        onPressCallNow={_onPressCallNow}
-      />
+            {/* Current Location & Confirm Button Container  */}
+            <View style={{position: 'absolute', bottom: height * -0.83}}>
+              {/* Current Location  */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => setCoordinates(UserReducer?.coords)}
+                style={styles.boxContainer2}>
+                <IconComp
+                  iconName="my-location"
+                  type={'MaterialIcons'}
+                  passedStyle={styles.myLocIconStyle}
+                />
+              </TouchableOpacity>
+
+              {/* Confirm Button  */}
+              {isLoading ? (
+                <View style={styles.lottieContainer}>
+                  <LottieView
+                    speed={1}
+                    style={styles.lottieStyles}
+                    autoPlay
+                    colorFilters={'blue'}
+                    loop
+                    source={require('../assets/Lottie/loading-yellow.json')}
+                  />
+                  <Heading
+                    title={'Requesting...'}
+                    passedStyle={styles.requestLabel}
+                  />
+                </View>
+              ) : (
+                <Button
+                  title="CONFIRM"
+                  onBtnPress={() => confirmBooking()}
+                  isBgColor={true}
+                  btnStyle={styles.btnStyle}
+                  btnTextStyle={styles.btnTextStyle}
+                />
+              )}
+            </View>
+          </View>
+        </>
+
+        {/* Bottom Sheet Component  */}
+        <BottomSheet
+          sheetRef={sheetRef}
+          onPress={_onPressStartTracking}
+          onPressCallNow={_onPressCallNow}
+        />
+      </SafeAreaView>
     </View>
   );
 };
@@ -228,6 +285,16 @@ const styles = StyleSheet.create({
     width: 100,
     marginLeft: width * 0.03,
     marginTop: height * -0.01,
+  },
+  lottieLoad: {
+    height: height * 0.3,
+    marginTop: height * -0.01,
+  },
+  loadMapStyle: {
+    width: width,
+    height: height,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   requestLabel: {
     fontSize: width * 0.055,
@@ -343,46 +410,10 @@ const mapStateToProps = ({UserReducer}) => {
 };
 
 export default connect(mapStateToProps, actions)(Map);
-
-/* <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginLeft: width * 0.05,
-        }}>
-        <GooglePlacesInput />
-        <IconComp
-          iconName="location-pin"
-          type={'MaterialIcons'}
-          passedStyle={{
-            marginRight: width * 0.87,
-            marginTop: height * 0.04,
-            color: 'grey',
-          }}
-        />
-      </View> */
-
-/* Selected Rider Popup  */
-/* <TouchableOpacity style={styles.boxContainer} activeOpacity={0.8}>
-            <View style={styles.rowView}>
-              <Image source={userimg} />
-              <View>
-                <Heading
-                  passedStyle={styles.text}
-                  title={'Michael Reimer'}
-                  fontType="bold"
-                />
-                <Heading
-                  passedStyle={styles.textMechanic}
-                  title={'Mechanic'}
-                  fontType="medium"
-                />
-              </View>
-            </View>
-
-            <IconComp
-              iconName="chevron-with-circle-right"
-              type={'Entypo'}
-              passedStyle={styles.icon_style}
-            />
-          </TouchableOpacity> */
+/* <StatusBar
+          translucent
+          animated={true}
+          backgroundColor="red"
+          barStyle="dark-content"
+          showHideTransition="slide"
+        /> */

@@ -21,11 +21,12 @@ const INITIAL_STATE = {
     title: '',
     msg: '',
     onPress: () => {},
-    showLoader:false,
+    showLoader: false,
   },
 };
 
 export function UserReducer(state = INITIAL_STATE, action) {
+  // console.log("=============--=-==--=-=-==-=--=-=-")
   switch (action.type) {
     case GET_CURRENT_LOC:
       return {
@@ -61,9 +62,11 @@ export function UserReducer(state = INITIAL_STATE, action) {
       };
 
     case UPDATE_USER_DATA:
+      console.log("---------------------------")
+      console.log(action.payload)
       return {
         ...state,
-        ...action.payload,
+        userData: {...action.payload},
       };
 
     case ERROR_MODAL:
@@ -73,7 +76,7 @@ export function UserReducer(state = INITIAL_STATE, action) {
       };
 
     case WALLET_BALANCE:
-      console.log(action.payload,'action.payload')
+      console.log(action.payload, 'action.payload');
       return {
         ...state,
         myWallet: action.payload,

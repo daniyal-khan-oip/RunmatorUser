@@ -2,12 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  TouchableOpacity,
   Image,
   Dimensions,
-  ScrollView,
   LogBox,
+  SafeAreaView,
   FlatList,
 } from 'react-native';
 import Heading from '../components/Heading';
@@ -24,12 +22,13 @@ import OptionsMapper from '../components/OptionsMapper';
 import * as actions from '../store/Actions/index';
 import {connect} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
+
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-function Home({navigation, UserReducer, getAllServices, ServicesReducer, }) {
+function Home({navigation, UserReducer, getAllServices, ServicesReducer}) {
   const [services, setServices] = useState([]);
   let isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,75 +49,84 @@ function Home({navigation, UserReducer, getAllServices, ServicesReducer, }) {
   useEffect(() => {
     if (isFocused === true) {
       setIsLoading(true);
-      getAllServices(accessToken).then(() => {
-        let arr = [];
-        ServicesReducer?.services?.map((ele, idx) => {
-          if (idx < 4) {
-            arr.push(ele);
-          }
-        });
-        setServices(arr);
-        setIsLoading(false);
-      });
+      getAllServices(accessToken);
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    if (ServicesReducer?.services?.length > 0) {
+      let arr = [];
+      ServicesReducer?.services?.map((ele, idx) => {
+        if (idx < 4) {
+          arr.push(ele);
+        }
+      });
+      setServices(arr);
+      setIsLoading(false);
+    }
+  }, [ServicesReducer?.services]);
   return (
     <View style={styles.container}>
-      <Header title="Menu" navigation={navigation} />
+      <SafeAreaView>
+        <Header title="Menu" navigation={navigation} />
 
-      {/* Features FlatList  */}
-      <FlatList
-        vertical
-        numColumns={2}
-        nestedScrollEnabled={true}
-        contentContainerStyle={styles.flatListContentContainerStyle}
-        data={services?.length > 0 ? services : dummyOptions}
-        keyExtractor={item => item?.id?.toString()}
-        ListHeaderComponent={() => (
-          <View style={styles.greetingContainer}>
-            <View style={styles.animationView}>
-              <Heading
-                title="Hello,"
-                passedStyle={styles.heading}
-                fontType="bold"
-              />
-              <Heading
-                title={
-                  name?.length > 12 ? `${name?.substring(0, 12)}...` : name
-                }
-                passedStyle={[
-                  styles.heading_username,
-                  name?.length > 7 && {fontSize: width * 0.08},
-                ]}
-                fontType="bold"
-              />
+        {/* Features FlatList  */}
+        <FlatList
+          vertical
+          numColumns={2}
+          nestedScrollEnabled={true}
+          // style={{height: height * 0.83}}
+          contentContainerStyle={styles.flatListContentContainerStyle}
+          data={services?.length > 0 ? services : dummyOptions}
+          keyExtractor={item => item?.id?.toString()}
+          ListHeaderComponent={() => (
+            <View style={styles.greetingContainer}>
+              <View style={styles.animationView}>
+                <Heading
+                  title="Hello,"
+                  passedStyle={styles.heading}
+                  fontType="bold"
+                />
+                <Heading
+                  title={
+                    name?.length > 12 ? `${name?.substring(0, 12)}...` : name
+                  }
+                  passedStyle={[
+                    styles.heading_username,
+                    name?.length > 7 && {fontSize: width * 0.08},
+                  ]}
+                  fontType="bold"
+                />
+              </View>
+              <Image source={wave} style={styles.img_wave} />
             </View>
-            <Image source={wave} style={styles.img_wave} />
-          </View>
-        )}
-        renderItem={({item, index}) => (
-          <OptionsMapper
-            item={item}
-            index={index}
-            onPress={_onPressOptions}
-            isLoading={isLoading}
-          />
-        )}
-      />
+          )}
+          ListFooterComponentStyle={styles.footerStyles}
+          ListFooterComponent={() => {
+            return (
+              !isLoading && (
+                <Button
+                  title="View All Services"
+                  onBtnPress={() => _onPressSignUp()}
+                  isBgColor={true}
+                  btnStyle={styles.btnStyle}
+                  btnTextStyle={styles.btnTextStyle}
+                />
+              )
+            );
+          }}
+          renderItem={({item, index}) => (
+            <OptionsMapper
+              item={item}
+              index={index}
+              onPress={_onPressOptions}
+              isLoading={isLoading}
+            />
+          )}
+        />
 
-      {/* All Services  */}
-      {!isLoading && (
-        <View style={styles.allServicesStyle}>
-          <Button
-            title="View All Services"
-            onBtnPress={() => _onPressSignUp()}
-            isBgColor={true}
-            btnStyle={styles.btnStyle}
-            btnTextStyle={styles.btnTextStyle}
-          />
-        </View>
-      )}
+        {/* All Services  */}
+      </SafeAreaView>
     </View>
   );
 }
@@ -150,11 +158,13 @@ const styles = StyleSheet.create({
   },
   flatListContentContainerStyle: {
     alignItems: 'center',
+    // justifyContent:'space-between'
   },
   allServicesStyle: {
     // marginVertical: height * 0.05,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: 'red',
   },
   container: {
     flex: 1,
@@ -202,6 +212,11 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.08,
     marginRight: width * 0.22,
     marginTop: height * 0.01,
+  },
+  footerStyles: {
+    paddingTop: height * 0.07,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
 });
 const mapStateToProps = ({UserReducer, ServicesReducer}) => {

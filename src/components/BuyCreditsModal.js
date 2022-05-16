@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnTextStyle: {
     color: colors.themeBlue,
-    fontFamily: 'Poppins-SemiBold',
+    // fontFamily: 'Poppins-SemiBold',
     fontSize: width * 0.04,
   },
   flexRow: {
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: width * 0.04,
     paddingVertical: height * 0.025,
     textAlignVertical: 'top',
-    fontFamily: 'Poppins-Regular',
+    // fontFamily: 'Poppins-Regular',
   },
   requestingView: {
     backgroundColor: colors.themeBlue,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     height: height * 0.105,
     position: 'absolute',
     marginVertical: -30,
-    bottom: height * 0.032,
+    bottom: height * 0.028,
     left: width * 0.01,
   },
   requestLabel: {

@@ -1,5 +1,11 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Dimensions, FlatList} from 'react-native';
+import React, {useState,useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import Heading from '../components/Heading';
 import Header from '../components/Header';
 import * as actions from '../store/Actions/index';
@@ -13,32 +19,43 @@ function AllServices({ServicesReducer, navigation}) {
 
   // Options Handler
   const _onPressOptions = (item, index) => {
-    navigation.navigate('Map');
+    navigation.navigate('Map', {item});
   };
 
+  useEffect(() => {
+    if (ServicesReducer?.services?.length > 0) {
+      setServices(ServicesReducer?.services);
+    }
+  }, [ServicesReducer?.services]);
   return (
     <View style={styles.container}>
-      <Header showBack={true} navigation={navigation} iconName="arrow-back" />
+      <SafeAreaView>
+        <Header showBack={true} navigation={navigation} iconName="arrow-back" />
 
-      <FlatList
-        nestedScrollEnabled={true}
-        vertical
-        numColumns={2}
-        contentContainerStyle={styles.flatListContentContainerStyle}
-        data={services}
-        keyExtractor={item => item?.id.toString()}
-        ListHeaderComponentStyle={styles.flatlistHeaderStyle}
-        ListHeaderComponent={() => (
-          <Heading
-            title="All Services"
-            passedStyle={styles.heading}
-            fontType="bold"
-          />
-        )}
-        renderItem={({item, index}) => (
-          <OptionsMapper item={item} index={index} onPress={_onPressOptions} />
-        )}
-      />
+        <FlatList
+          nestedScrollEnabled={true}
+          vertical
+          numColumns={2}
+          contentContainerStyle={styles.flatListContentContainerStyle}
+          data={services}
+          keyExtractor={item => item?.id.toString()}
+          ListHeaderComponentStyle={styles.flatlistHeaderStyle}
+          ListHeaderComponent={() => (
+            <Heading
+              title="All Services"
+              passedStyle={styles.heading}
+              fontType="bold"
+            />
+          )}
+          renderItem={({item, index}) => (
+            <OptionsMapper
+              item={item}
+              index={index}
+              onPress={_onPressOptions}
+            />
+          )}
+        />
+      </SafeAreaView>
     </View>
   );
 }

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    fontFamily: 'Poppins-Regular',
+    // fontFamily: 'Poppins-Regular',
     borderColor: 'white',
     borderRadius: 15,
     color: 'black',

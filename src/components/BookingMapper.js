@@ -30,7 +30,7 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
       {/* Event Heading  */}
       <View style={styles.headingView}>
         <Heading
-          title={item?.occasion?.name}
+          title={"Braking Service"}
           passedStyle={styles.occasionText}
           fontType={'semi-bold'}
         />
@@ -44,11 +44,11 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
             passedStyle={styles.locationIcon}
           />
           <Heading title={`Status:`} passedStyle={styles.label} />
-          <Heading title={item?.status} passedStyle={styles.value} />
+          <Heading title={"Pending"} passedStyle={styles.value} />
         </View>
 
         {/* Native Language  */}
-        <View style={styles.locationView}>
+        {/* <View style={styles.locationView}>
           <IconComp
             type="Fontisto"
             iconName="person"
@@ -60,7 +60,7 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
             title={`${item?.primary_language?.language_name}`}
             passedStyle={styles.value}
           />
-        </View>
+        </View> */}
 
         {/* Language View  */}
         {item?.translating_language?.map((ele, index) => (
@@ -96,7 +96,7 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
         </View>
 
         {/* Event Duration  */}
-        <View style={styles.locationView}>
+        {/* <View style={styles.locationView}>
           <IconComp
             type="MaterialIcons"
             iconName="event-note"
@@ -108,7 +108,7 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
             )}`}
             passedStyle={styles.value}
           />
-        </View>
+        </View> */}
 
         {/* Location View  */}
         <View style={styles.locationView}>
@@ -118,7 +118,7 @@ const BookingMapper = ({item, onPress, isLoading, key, UserReducer}) => {
             passedStyle={styles.locationIcon}
           />
           <Heading
-            title={item?.translation_address}
+            title={"Xyz Street Country Abc"}
             passedStyle={styles.locationAddress}
           />
         </View>

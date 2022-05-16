@@ -43,7 +43,7 @@ const ChangePassword = ({navigation, UserReducer, changePasswordRequest}) => {
         password: newPass,
         new_password: confirmPass,
     };
-    if (oldPass.length > 0 && newPass.length > 0 && confirmPass.length > 0) {
+    if ( newPass.length > 0 && confirmPass.length > 0) {
       if (newPass !== confirmPass) {
         setShowMismatchPasswordAlert(true);
       } else {
@@ -81,7 +81,7 @@ const ChangePassword = ({navigation, UserReducer, changePasswordRequest}) => {
             passedStyle={styles.heading}
             fontType="semi-bold"
           />
-          <Inputbox
+          {/* <Inputbox
             value={oldPass}
             isSecure={isShowPassword}
             isPassword={true}
@@ -101,7 +101,7 @@ const ChangePassword = ({navigation, UserReducer, changePasswordRequest}) => {
               left: width * 0.7,
             }}
             placeholderTextColor="rgba(0,0,0,0.5)"
-          />
+          /> */}
           <Inputbox
             value={newPass}
             isSecure={isShowPassword}
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     color: 'black',
     borderColor: colors.themeBlue,
     width: width * 0.9,
-    fontFamily: 'Poppins-Regular',
+    // fontFamily: 'Poppins-Regular',
   },
   heading: {
     color: 'black',
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   btnTextColor: {
     color: 'white',
-    fontFamily: 'Poppins-SemiBold',
+    // fontFamily: 'Poppins-SemiBold',
     fontSize: width * 0.045,
   },
   lottieStyles: {

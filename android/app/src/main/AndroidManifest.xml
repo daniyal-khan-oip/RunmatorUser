@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDGCEsILkoCpmz1Gn63Kf754Jmb2YmOMJo" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBStPDYl2bu_pA_G3XRzWA5eEWc_yBGBx4" />
+<!--        android:value="AIzaSyDGCEsILkoCpmz1Gn63Kf754Jmb2YmOMJo"-->
         <!-- android:value="AIzaSyBTsC4XcbDQgH_tBwHdKAUUXyVtdOTL4I0" -->
         <meta-data android:name="com.dieam.reactnativepushnotification.notification_foreground" android:value="false" />
         <meta-data tools:replace="android:value" android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="channel-id" />

@@ -8,6 +8,7 @@ export const userSignup = (data, _onSignUpFailed) => async dispatch => {
   console.log('data: ', data);
   try {
     const response = await axios.post(`${apiUrl}/register`, data);
+    console.log(response, 'response');
     if (response?.data?.status) {
       dispatch({
         type: types.USER_SIGNUP,
@@ -31,7 +32,7 @@ export const userSignup = (data, _onSignUpFailed) => async dispatch => {
   } catch (error) {
     console.log(
       'CATCH ERROR RESPONSE STATUS: ',
-      JSON.stringify(error?.response?.data, null, 2),
+      JSON.stringify(error, null, 2),
     );
     _onSignUpFailed();
     dispatch({
@@ -53,7 +54,6 @@ export const userLogin = (data, _onLoginFailed) => async dispatch => {
   try {
     console.log('data: ', data);
     const URL = `${apiUrl}/login`;
-    console.log('URL', URL);
     const response = await axios.post(URL, data, {
       headers: {
         Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
@@ -169,7 +169,7 @@ export const getAllServices = token => async dispatch => {
     });
 
     if (res?.data?.status) {
-      console.log(JSON.stringify(res.data.data, null, 2), ' services data');
+      // console.log(JSON.stringify(res.data.data, null, 2), ' services data');
       dispatch({
         type: types.GET_SERVICES,
         payload: res.data.data.filter(ele => ele.services_status === 1),
@@ -227,7 +227,7 @@ export const getCurrentLocation = () => async dispatch => {
   try {
     Geolocation.getCurrentPosition(
       position => {
-        console.log('=====', position);
+        // console.log('=====', position);
         dispatch({
           type: types.GET_CURRENT_LOC,
           payload: {
@@ -253,16 +253,17 @@ export const getCurrentLocation = () => async dispatch => {
 export const requestForService =
   (data, token, _onFailed, _onPressModalSuccessButton) => async dispatch => {
     console.log('DATAAAAAAAAA ', JSON.stringify(data, null, 2));
-    const test = {
-      lat: 37.4220047,
-      long: -122.0839995,
-      radius: 10,
-      service_id: 13,
-      user_id: 53,
-    };
+    // const test = {
+    //   lat: 37.4220047,
+    //   long: -122.0839995,
+    //   radius: 10,
+    //   service_id: 11,
+    //   user_id: 40,
+    // };
     try {
       const response = await axios.post(
-        `${apiUrl}/api/admin/request_for_service`,
+        // `${apiUrl}/api/admin/request_for_service`,
+        'https://webprojectmockup.com/custom/runmatter_apis/public/api/admin/request_for_service',
         data,
         {
           headers: {
@@ -271,8 +272,9 @@ export const requestForService =
           },
         },
       );
-      console.log('-------------', response, '0000');
-      if (response?.data?.status) {
+      console.log('-------------BOOOKED SERVICE@@@@@@@@@', response, '0000');
+      if (response?.data?.status === true) {
+        console.log('IF CASE K ANDR AGAYA HAY');
         dispatch({
           type: types.ERROR_MODAL,
           payload: {
@@ -283,15 +285,17 @@ export const requestForService =
           },
         });
       } else {
+        console.log(response.data, 'ELSE CASE K ANDR HEYYYYYYYYYYY');
         _onFailed();
-        // dispatch({
-        //   type: types.ERROR_MODAL,
-        //   payload: {
-        //     title: 'Request Failed!',
-        //     msg: 'Something went wrong.',
-        //     status: true,
-        //   },
-        // });
+        dispatch({
+          type: types.ERROR_MODAL,
+          payload: {
+            title: 'Service Providers Unavailable!',
+            msg: "Your desired service has no providers around this location.",
+            status: true,
+            // onPress: _onPressModalSuccessButton,
+          },
+        });
       }
     } catch (err) {
       _onFailed();
@@ -303,16 +307,15 @@ export const requestForService =
           status: true,
         },
       });
-      console.log('Buying Credits Failed! ', err);
+      console.log('Cant Book Service ', err.response.data);
+      console.log('Cant Book Service ', err.response.data.message);
     }
   };
 
-export const updateProfile = (data, token, _onFailed) => async dispatch => {
-  // var formData = new FormData();
-  // formData.append('id', 33);
-  // formData.append('name', "Ahsan");
-  // formData.append('name', "Ahsan");
-  // console.log(data)
+export const updateProfile = (data, token, _onFailed, isUpdatingImage) => async dispatch => {
+  // console.log(data, '~~~~~~~~~~~~~~~~~~~~~~~'.isUpdatingImage);
+  console.log("..................",isUpdatingImage)
+
   // if (data.image !== undefined && data.image !== null && data.image !== '') {
   //   formData.append('image', {
   //     uri: data.image.uri,
@@ -321,15 +324,32 @@ export const updateProfile = (data, token, _onFailed) => async dispatch => {
   //   });
 
   // }
+
+  // var formData = new FormData();
+  // formData.append('id', data.id);
+  // formData.append('name', data.name);
+  // formData.append('image', {
+  //   // uri: data.image.uri,
+  //   uri: 'data:image/jpeg;base64,' + data.image.base64,
+  //   name: data.image.fileName,
+  //   type: data.image.type,
+  // });
+  // console.log(data.image.base64)
+
   const userData = {
-    id: data.id,
-    image: {
-      uri: data.image.uri,
-      name: data.image.fileName,
-      type: data.image.type,
-    },
-    name: data.name,
+    id: data?.id,
+    image: data.image,
+    // image: isUpdatingImage ? 'data:image/jpeg;base64,' + data.image.base64 : data.image,
+
+    // {
+    //   name: data.image.name,
+    //   type: data.image.type,
+    //   uri: 'data:image/jpeg;base64,' + data.image.base64,
+    // },
+    name: data?.name,
   };
+
+  console.log(userData)
   try {
     const response = await axios({
       method: 'post',
@@ -337,23 +357,16 @@ export const updateProfile = (data, token, _onFailed) => async dispatch => {
       data: userData,
       headers: {
         Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
-        Accept: 'application/json',
+        // Accept: 'application/json',
+        // 'Content-Type':
+        //   'multipart/form-data; boundary=<calculated when request is sent>',
       },
     });
-    // const response = await axios.post(
-    //   `${apiUrl}/admin/profile_img_update`,
-    //   {
-    //     formData
-    //   },
-
-    //   {
-    //     headers: {
-    //       Authorization: 'Bearer 28|zfYLBDgYy2Lb8oY1j4LqimqwuLzCjSHNhRSJzcpt',
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   },
-    // );
-    console.log(response?.data);
+  
+    console.log(
+      'RESPONSE =====================',
+      JSON.stringify(response?.data.data, null, 2),
+    );
     if (response?.data.status) {
       dispatch({
         type: types.ERROR_MODAL,
@@ -363,9 +376,10 @@ export const updateProfile = (data, token, _onFailed) => async dispatch => {
           status: true,
         },
       });
+      console.log('=======', response.data.data);
       dispatch({
         type: types.UPDATE_USER_DATA,
-        payload: response.data.updated_data,
+        payload: response.data.data,
       });
     }
     if (!response?.data.status) {
@@ -374,7 +388,7 @@ export const updateProfile = (data, token, _onFailed) => async dispatch => {
         type: types.ERROR_MODAL,
         payload: {
           title: 'Profile Update Failed!',
-          msg: 'Something went wrongg.',
+          msg: 'Something went wrong.',
           status: true,
         },
       });
@@ -395,6 +409,7 @@ export const updateProfile = (data, token, _onFailed) => async dispatch => {
 
 export const changePasswordRequest =
   (data, token, _onSuccessChanged) => async dispatch => {
+    console.log(data,"Passwords DAta")
     try {
       const URL = `${apiUrl}/admin/profile_update`;
       const authHeader = {
@@ -421,7 +436,7 @@ export const changePasswordRequest =
           type: types.ERROR_MODAL,
           payload: {
             title: 'Password Change Failed!',
-            msg: 'Something went wrongg.',
+            msg: 'Something went wrong.',
             status: true,
           },
         });
@@ -433,7 +448,7 @@ export const changePasswordRequest =
         type: types.ERROR_MODAL,
         payload: {
           title: 'Password Change Failed!',
-          msg: 'Something went wrongg.',
+          msg: 'Something went wrong.',
           status: true,
         },
       });

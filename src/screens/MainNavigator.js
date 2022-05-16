@@ -16,6 +16,7 @@ import messaging from '@react-native-firebase/messaging';
 import AlertModal from '../components/AlertModal';
 import * as actions from '../store/Actions/index';
 
+
 const MainNavigator = ({UserReducer, setErrorModal, getCurrentLocation}) => {
   const [token, setToken] = useState(UserReducer?.accessToken);
   const [loading, setLoading] = useState(false);

@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   View,
+  SafeAreaView,
   Text,
 } from 'react-native';
 import Header from '../components/Header';
@@ -29,60 +30,66 @@ const HistoryScreen = props => {
   return (
     <>
       <View style={styles.container}>
-        {/* Header  */}
-        <Header
-          showBack={true}
-          navigation={props.navigation}
-          iconName="arrow-back"
-        />
-
-        {/* Screen Heading  */}
-        <View style={{flexDirection: 'row'}}>
-          <Heading
-            title="History"
-            passedStyle={styles.heading}
-            fontType="bold"
+        <SafeAreaView>
+          {/* Header  */}
+          <Header
+            showBack={true}
+            navigation={props.navigation}
+            iconName="arrow-back"
           />
-        </View>
 
-        {/* Table Headings  */}
-        <View style={[styles.tableHeadings]}>
-          <Heading
-            passedStyle={styles.heading1}
-            title="Last Service"
-            fontType="bold"
+          {/* Screen Heading  */}
+          <View style={{flexDirection: 'row'}}>
+            <Heading
+              title="History"
+              passedStyle={styles.heading}
+              fontType="bold"
+            />
+          </View>
+
+          {/* Table Headings  */}
+          <View style={[styles.tableHeadings]}>
+            <Heading
+              passedStyle={styles.heading1}
+              title="Last Service"
+              fontType="bold"
+            />
+            <Heading
+              passedStyle={styles.heading1}
+              title="Paid"
+              fontType="bold"
+            />
+          </View>
+
+          <FlatList
+            data={dummyData}
+            vertical
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => item._id.toString()}
+            contentContainerStyle={styles.flatListContentContainerStyle}
+            renderItem={({item, index}) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.rowView}
+                onPress={() => onItemPress(item, index)}>
+                <Heading
+                  passedStyle={styles.textStyle}
+                  title={`${index + 1}. `.concat(
+                    item.text.length > 20
+                      ? `${item.text.substring(0, 20)}...`
+                      : item.text,
+                  )}
+                  fontType="medium"
+                />
+                <Heading
+                  passedStyle={styles.textStyle}
+                  title={`$${item.price.toFixed(2)}`}
+                  fontType="medium"
+                />
+              </TouchableOpacity>
+            )}
           />
-          <Heading passedStyle={styles.heading1} title="Paid" fontType="bold" />
-        </View>
-
-        <FlatList
-          data={dummyData}
-          vertical
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => item._id.toString()}
-          contentContainerStyle={styles.flatListContentContainerStyle}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.rowView}
-              onPress={() => onItemPress(item, index)}>
-              <Heading
-                passedStyle={styles.textStyle}
-                title={`${index + 1}. `.concat(
-                  item.text.length > 20
-                    ? `${item.text.substring(0, 20)}...`
-                    : item.text,
-                )}
-                fontType="medium"
-              />
-              <Heading
-                passedStyle={styles.textStyle}
-                title={`$${item.price.toFixed(2)}`}
-                fontType="medium"
-              />
-            </TouchableOpacity>
-          )}
-        />
+        </SafeAreaView>
       </View>
       {isModalVisible && (
         <HistoryModal

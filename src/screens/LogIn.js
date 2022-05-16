@@ -39,6 +39,7 @@ const LogIn = ({navigation, UserReducer, userLogin, getCurrentLocation}) => {
     setIsLoading(true);
     if (username === '' || password === '') {
       alert('Both fields required');
+      onLoginFailed();
     } else {
       await userLogin(data, onLoginFailed);
     }

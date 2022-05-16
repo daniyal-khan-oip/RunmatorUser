@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid, StyleSheet, Text, View} from 'react-native';
+import {PermissionsAndroid, StyleSheet, Text, View,SafeAreaView} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from './Home';
 import HistoryScreen from './HistoryScreen';
@@ -14,7 +14,6 @@ import HomeScreensStack from './HomeStackScreens';
 import AlertModal from '../components/AlertModal';
 import ChangePassword from './ChangePassword';
 import CurrentBookings from './CurrentBookings';
-
 const Drawer = createDrawerNavigator();
 
 export default function MainAppScreens({navigation}) {
@@ -45,12 +44,12 @@ export default function MainAppScreens({navigation}) {
       iconType: 'Ionicons',
       routeName: 'profile',
     },
-    {
-      id: 5,
-      iconName: 'home-repair-service',
-      iconType: 'MaterialIcons',
-      routeName: 'current bookings',
-    },
+    // {
+    //   id: 5,
+    //   iconName: 'home-repair-service',
+    //   iconType: 'MaterialIcons',
+    //   routeName: 'current bookings',
+    // },
     {
       id: 6,
       iconName: 'onepassword',

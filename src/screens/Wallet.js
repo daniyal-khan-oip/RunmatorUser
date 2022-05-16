@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Dimensions,
   View,
+  SafeAreaView,
   Text,
   TouchableOpacity,
 } from 'react-native';
@@ -39,7 +40,7 @@ const HistoryScreen = ({
     }
   }, [UserReducer?.myWallet, isFocused]);
 
-  console.log(UserReducer?.myWallet,"UserReducer?.myWallet")
+  console.log(UserReducer?.myWallet, 'UserReducer?.myWallet');
   const _onPressBuyCredits = () => {
     setIsLoading(true);
     // let formData = new FormData();
@@ -57,48 +58,57 @@ const HistoryScreen = ({
     });
   };
 
-
   return (
     <>
       <View style={styles.container}>
-        <Header showBack={true} navigation={navigation} iconName="arrow-back" />
-        <Heading title="Wallet" passedStyle={styles.heading} fontType="bold" />
-        <View style={styles.centerView}>
-          <View>
-            <Heading
-              passedStyle={styles.totalAmountInAcc}
-              title="Total amount in your account:"
-              fontType="medium"
-            />
-            <Heading
-              passedStyle={styles.amount}
-              title={`$${
-                UserReducer?.myWallet !== ''
-                  ? `${UserReducer?.myWallet}.00`
-                  : '0.00'
-              }`}
-              fontType="bold"
+        <SafeAreaView>
+          <Header
+            showBack={true}
+            navigation={navigation}
+            iconName="arrow-back"
+          />
+          <Heading
+            title="Wallet"
+            passedStyle={styles.heading}
+            fontType="bold"
+          />
+          <View style={styles.centerView}>
+            <View>
+              <Heading
+                passedStyle={styles.totalAmountInAcc}
+                title="Total amount in your account:"
+                fontType="medium"
+              />
+              <Heading
+                passedStyle={styles.amount}
+                title={`$${
+                  UserReducer?.myWallet !== ''
+                    ? `${UserReducer?.myWallet}.00`
+                    : '0.00'
+                }`}
+                fontType="bold"
+              />
+            </View>
+            <Button
+              title="Buy Credits ($)"
+              onBtnPress={() => setShowCreditModal(true)}
+              isBgColor={true}
+              btnStyle={{alignSelf: 'center', marginBottom: 60}}
             />
           </View>
-          <Button
-            title="Buy Credits ($)"
-            onBtnPress={() => setShowCreditModal(true)}
-            isBgColor={true}
-            btnStyle={{alignSelf: 'center', marginBottom: 40}}
-          />
-        </View>
-        {showCreditModal && (
-          <BuyCreditsModal
-            title={'Credit Details'}
-            onPress={_onPressBuyCredits}
-            isModalVisible={showCreditModal}
-            setIsModalVisible={setShowCreditModal}
-            showLoader={isLoading}
-            credits={credits}
-            buttonText="Buy"
-            setCredits={setCredits}
-          />
-        )}
+          {showCreditModal && (
+            <BuyCreditsModal
+              title={'Credit Details'}
+              onPress={_onPressBuyCredits}
+              isModalVisible={showCreditModal}
+              setIsModalVisible={setShowCreditModal}
+              showLoader={isLoading}
+              credits={credits}
+              buttonText="Buy"
+              setCredits={setCredits}
+            />
+          )}
+        </SafeAreaView>
       </View>
     </>
   );
